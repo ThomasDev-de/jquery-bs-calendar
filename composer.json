@@ -10,6 +10,7 @@
     }
   ],
   "require": {
+    "components/font-awesome": "6.2.0",
     "components/jquery": "3.6.0",
     "twbs/bootstrap": "5.2.0",
     "moment/moment": "2.29.4"

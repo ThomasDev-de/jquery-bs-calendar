@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en" class="h-100">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>jquery-bs-calendar demo</title>
+    <link href="../vendor/components/font-awesome/css/all.min.css" rel="stylesheet">
+    <link href="../vendor/twbs/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="h-100 bg-dark d-flex align-items-stretch">
+<div class="container flex-fill bg-white py-5">
+    <h1>jquery-bs-calendar</h1>
+    <button class="btn btn-dark" data-bs-toggle="calendar"><i class="fa-regular fa-calendar-days"></i></button>
+    <div data-bs-toggle="calendar" id="calendar_inline" data-bs-target="actions.php"></div>
+</div>
+
+
+<script src="../vendor/components/jquery/jquery.min.js"></script>
+<script src="../vendor/moment/moment/min/moment-with-locales.min.js"></script>
+<script src="../vendor/twbs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+<script src="../dist/jquery.bs.calendar.js"></script>
+<script>
+    (function($){
+        $('#calendar_inline').bsCalendar();
+    }(jQuery));
+</script>
+</body>
+</html>
