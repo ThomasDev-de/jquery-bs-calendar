@@ -1,6 +1,6 @@
 # jquery-bs-calendar
 ### options
-```json
+```js
 {
     url: null,
     width: 310,
@@ -10,7 +10,7 @@
 }
 ```
 ### the event object
-```json
+```js
 {
     "id": 1,
     "title": "first date",
