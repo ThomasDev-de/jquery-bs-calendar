@@ -1,6 +1,110 @@
 /* global moment */
-(function ($) {
+//! moment-holiday.js locale configuration
+//! locale : Germany
+//! author : Kodie Grantham : https://github.com/kodie
+/* regions :
+      BB : Brandenburg
+      BW : Baden-Württemberg
+      BY : Bayern
+      HE : Hessen
+      MV : Mecklenburg-Vorpommern
+      NW : Nordrhein-Westfalen
+      RP : Rheinland-Pfalz
+      SN : Sachsen
+      SL : Saarland
+      ST : Sachsen-Anhalt
+      TH : Thüringen
+*/
 
+// (function() {
+//     var moment = (typeof require !== 'undefined' && require !== null) && !require.amd ? require('moment') : this.moment;
+//
+//     moment.holidays.germany = {
+//         "Neujahrstag": {
+//             date: '1/1',
+//             keywords: ['new', 'year']
+//         },
+//         "Karfreitag": {
+//             date: 'easter-2',
+//             keywords: ['good', 'friday']
+//         },
+//         "Ostersonntag": {
+//             date: 'easter',
+//             keywords: ['easter'],
+//             keywords_n: ['monday'],
+//             regions: ['bb']
+//         },
+//         "Ostermontag": {
+//             date: 'easter+1',
+//             keywords: ['easter', 'monday']
+//         },
+//         "Heilige Drei Könige": {
+//             date: '1/6',
+//             keywords: ['konige'],
+//             regions: ['bw', 'by', 'st']
+//         },
+//         "Maifeiertag": {
+//             date: '5/1'
+//         },
+//         "Christi Himmelfahrt": {
+//             date: 'easter+39',
+//             kaywords: ['ascension']
+//         },
+//         "Pfingstsonntag": {
+//             date: 'easter+49',
+//             keywords: ['pentecost'],
+//             regions: ['bb']
+//         },
+//         "Pfingstmontag": {
+//             date: 'easter+50',
+//             keywords: ['whit', 'monday']
+//         },
+//         "Fronleichnam": {
+//             date: 'easter+60',
+//             keywords: ['corpus', 'christi'],
+//             regions: ['bw', 'by', 'he', 'nw', 'rp', 'sl']
+//         },
+//         "Mariä Himmelfahrt": {
+//             date: '8/15',
+//             keywords: ['maria'],
+//             regions: ['sl']
+//         },
+//         "Tag der deutschen Einheit": {
+//             date: '10/3'
+//         },
+//         "Reformationstag": {
+//             date: '10/31',
+//             regions: ['bb', 'mv', 'sn', 'st', 'th']
+//         },
+//         "Allerheiligen": {
+//             date: '11/1',
+//             regions: ['bw', 'by', 'nw', 'rp', 'sl']
+//         },
+//         "Buß- und Bettag": {
+//             date: '11/(3,[17])',
+//             keywords: ['bub'],
+//             regions: ['sn']
+//         },
+//         "Weihnachten": {
+//             date: '12/24',
+//             keywords: ['christmas']
+//         },
+//         "Zweiter Weihnachtsfeiertag": {
+//             date: '12/26',
+//             keywords_y: ['zweiter']
+//         }
+//     };
+//
+//     if ((typeof module !== 'undefined' && module !== null ? module.exports : void 0) != null) { module.exports = moment; }
+// }).call(this);
+
+(function ($) {
+    moment.locale("de",{
+        week: {
+            dow: 1
+        }
+    });
+    moment.locale("de");
     function getDefaults(container) {
         return {
             url: container.data('bsTarget') || null,
@@ -12,10 +116,25 @@
                 prev: 'fa-solid fa-arrow-left fa-fw',
                 next: 'fa-solid fa-arrow-right fa-fw',
             },
-            formatEvent: function(event){
+            eventButtons: [{
+                title: 'edit event',
+                class: 'btn btn-outline-dark',
+                icon: 'fa-solid fa-edit fa-fw',
+                click: function (e, event) {
+                    console.log('event btn clicked', event);
+                }
+            },{
+                title: 'remove event',
+                class: 'btn btn-outline-dark',
+                icon: 'fa-solid fa-trash fa-fw',
+                click: function (e, event) {
+                    console.log('event btn clicked', event);
+                }
+            }],
+            formatEvent: function (event) {
                 return drawEvent(event);
             },
-            formatNoEvent: function(date){
+            formatNoEvent: function (date) {
                 return drawNoEvent(date);
             }
         }
@@ -31,8 +150,8 @@
     }
 
 
-    function drawEvent(event){
-        let desc = event.description ? '<p class="m-0">'+ event.description + '</p>' : '';
+    function drawEvent(event) {
+        let desc = event.description ? '<p class="m-0">' + event.description + '</p>' : '';
         let s, e;
         let startDate = event.start.split(' ')[0];
         let endDate = event.end.split(' ')[0];
@@ -51,16 +170,17 @@
         //     event.description,
         // ].join('<br>');
         return `
-        <div class="d-flex flex-column p-1" style="font-size:.8em">
+        <div class="d-flex flex-column" style="font-size:.8em">
             <h6 class="mb-0 text-uppercase">${event.title}</h6>
             <small class="text-muted">${s} - ${e}</small>
             ${desc}
         </div>
         `;
     }
-    function drawNoEvent(date){
+
+    function drawNoEvent(date) {
         return `
-        <div class="p-4 bg-secondary text-bg-secondary rounded">
+        <div class="p-4 bg-light text-bg-light border border-dark rounded">
         <h6 class="mb-0 text-uppercase">Keine Termine</h6>
         </div>
         `;
@@ -71,7 +191,7 @@
         const container = $(this);
         let xhr = null;
 
-        let settings = $.extend(true, getDefaults(container), options || {});
+        let settings = $.extend( getDefaults(container), options || {});
 
         container.css({'width': settings.width}).addClass('bg-white shadow rounded');
 
@@ -86,7 +206,7 @@
         let containerCalendar = $('<div>').appendTo(container);
         let containerCalendarFooter = $('<div>', {class: 'd-flex flex-nowrap justify-content-center align-items-center pt-1'}).appendTo(container);
         let calendar = [];
-        let containerHeader, btnPrev, btnNext, monthName, dayName, btnCloseCollapse, btnCurrMonth, table, collapse;
+        let containerHeader, btnPrev, btnNext, monthName, dayName, btnCloseCollapse, btnCurrMonth, eventList, collapse;
 
         const today = moment();
         let current = today.clone();
@@ -125,8 +245,8 @@
                 class: 'text-center font-weight-bold py-2'
             }).appendTo(collapse);
 
-            table = $('<div>', {
-                class: 'list-group list-group-flush'
+            eventList = $('<div>', {
+                class: ''
             }).appendTo(collapse);
 
             let div = $('<div>', {
@@ -139,8 +259,8 @@
                 html: '<i class="fas fa-times fa-fw"></i> Schließen'
             }).appendTo(div);
 
-            // table.bootstrapTable({
-            //     classes: 'table table-sm table-hover table-striped',
+            // eventList.bootstrapTable({
+            //     classes: 'eventList eventList-sm eventList-hover eventList-striped',
             //     sidePagination: 'client',
             //     paginationVAlign: 'bottom',
             //     onPostBody: () => {
@@ -237,7 +357,6 @@
         }
 
 
-
         function buildCalendarHeader() {
 
             $('<div>', {
@@ -278,6 +397,7 @@
                     from: selected.clone().startOf('month').startOf('week').format('YYYY-MM-DD'),
                     to: selected.clone().endOf('month').endOf('week').format('YYYY-MM-DD')
                 }, function (events) {
+                    container.trigger('events-loaded', [events]);
                     callback(events || []);
                 }, 'json');
             }
@@ -382,7 +502,7 @@
                     container.find('.js-today').click();
                 }
 
-                console.log(events);
+                // console.log(events);
             });
         }
 
@@ -399,16 +519,16 @@
                 .on('click', function (e) {
                     e.preventDefault();
                     collapse.hide();
-                    triggerChange();
+                    // triggerChange();
                 });
             btnPrev
                 .on('click', function (e) {
                     e.preventDefault();
                     current = current.clone().subtract(1, 'months');
                     drawCalendar(current);
-                    // table.bootstrapTable('removeAll')
+                    // eventList.bootstrapTable('removeAll')
                     collapse.hide();
-                    triggerChange();
+                    // triggerChange();
                 });
 
             btnCurrMonth
@@ -416,9 +536,9 @@
                     e.preventDefault();
                     current = today.clone();
                     drawCalendar(current);
-                    // table.bootstrapTable('removeAll')
+                    // eventList.bootstrapTable('removeAll')
                     collapse.hide();
-                    triggerChange();
+                    // triggerChange();
                 });
 
             btnNext
@@ -426,9 +546,9 @@
                     e.preventDefault();
                     current = current.clone().add(1, 'M')
                     drawCalendar(current);
-                    // table.bootstrapTable('removeAll')
+                    // eventList.bootstrapTable('removeAll')
                     collapse.hide();
-                    triggerChange();
+                    // triggerChange();
                 });
             containerCalendar
                 .on('click', '[data-date]', function (e) {
@@ -436,46 +556,78 @@
                     containerCalendar.find('[data-date].border-secondary').removeClass('border-secondary').addClass('border-white');
                     $column.removeClass('border-white').addClass('border-secondary')
                     let date = moment($column.data('date'));
+                    let events = $column.data('events');
                     dayName.html(date.format('DD.MM.YYYY'));
-                    drawEventList($column.data('events'), date)
+                    drawEventList(events, date)
                     // container.find('[data-date]').removeClass('bg-danger');
-                    // table.bootstrapTable('load', $(e.currentTarget).data('events'));
+                    // eventList.bootstrapTable('load', $(e.currentTarget).data('events'));
                     collapse.show();
                     // $(e.currentTarget).addClass('bg-danger');
-                    triggerChange();
+                    container.trigger('change-day', [date, events]);
+                    // triggerChange();
                 });
+
+            container.on('click', '.js-event', function (e) {
+                let event = $(e.currentTarget).data('event');
+                container.trigger('click-event', [event]);
+            })
         }
 
 
         function drawEventList(events, date) {
-            table.empty();
+            eventList.empty();
             if (!events.length) {
-                $('<li>', {
-                    class: 'list-group-item p-ß',
+                $('<div>', {
+                    class: '',
                     html: settings.formatNoEvent(date)
-                }).appendTo(table);
+                }).appendTo(eventList);
                 return;
             }
 
             events.forEach(event => {
+                let eventHtml = settings.formatEvent(event);
 
+                let eventWrapper = $('<div>', {
+                    class: 'js-event d-flex justify-content-between align-items-center p-2 rounded border border-dark mb-1',
+                    html: `
+                        <div class="flex-fill">${eventHtml}</div>
+                        <div>
+                            <div class="btn-group-vertical btn-group-sm" role="group" aria-label="Vertical button group"></div>
+                        </div>
+                       
+                    `
+                }).appendTo(eventList);
+                let actionButtons = getEventButtons(event, eventWrapper.find('.btn-group-vertical'));
+                eventWrapper.data('event', event);
 
+            });
+        }
 
-
-                $('<li>', {
-                    class: 'list-group-item p-ß',
-                    html: settings.formatEvent(event)
-                }).appendTo(table);
+        function getEventButtons(event, wrap) {
+            let arr = [];
+            settings.eventButtons.forEach(btn => {
+                let button = $('<a>', {
+                    href: '#',
+                    class: btn.class,
+                    html: `<i class="${btn.icon}"></i>`
+                })
+                button.appendTo(wrap);
+                button.on('click', function(e){
+                    btn.click(e, event)
+                })
             });
         }
 
         function init() {
+
             buildNavbar();
             buildCalendarHeader();
             drawCalendar(today);
             drawCalendarFooter();
             buildTable();
             events();
+
+            container.trigger('init', []);
 
             return container;
         }
