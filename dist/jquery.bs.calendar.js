@@ -318,8 +318,6 @@
                     container.trigger('change-day', [date, events]);
                 });
         }
-
-
         function drawEventList(events, date) {
             let eventList = $('.js-events')
             eventList.empty();
