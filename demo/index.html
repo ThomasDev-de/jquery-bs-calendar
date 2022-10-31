@@ -11,18 +11,24 @@
 <div class="container flex-fill bg-white py-5 d-flex flex-column  align-items-center">
     <h1>jquery-bs-calendar</h1>
     <hr class="border-dark border border-2 w-100">
-    <div class="dropdown-center">
-        <button class="btn btn-secondary dropdown-toggle"  data-bs-auto-close="outside" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-            <i class="fa-regular fa-calendar-days"></i>
-        </button>
-        <div class="dropdown-menu">
-            <div data-bs-toggle="calendar" id="calendar_dropdown" data-bs-target="events.json"></div>
+
+    <div class="row row-cols-2">
+        <div class="col">
+            <div class="dropdown-center">
+                <button class="btn btn-secondary dropdown-toggle" data-bs-auto-close="outside" type="button"
+                        data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="fa-regular fa-calendar-days"></i>
+                </button>
+                <div class="dropdown-menu p-0">
+                    <div data-bs-toggle="calendar" id="calendar_dropdown" data-bs-target="events.json"></div>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div data-bs-toggle="calendar" id="calendar_inline" class="col shadow rounded" data-bs-target="events.json"></div>
         </div>
     </div>
 
-    <div data-bs-toggle="calendar" id="calendar_inline" data-bs-target="events.json"></div>
-
-<!--    <div data-bs-toggle="calendar" id="calendar_inline" data-bs-target="events.json"></div>-->
 
     <pre id="log">
     </pre>
@@ -34,14 +40,12 @@
 <script src="../vendor/twbs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 <script src="../dist/jquery.bs.calendar.js"></script>
 <script>
-    (function($){
-        function log(log){
-            $('#log').html($('#log').html()+'\n'+log);
-        }
+    (function ($) {
+        $.bsCalendar.setDefault('width', 5000);
+        $('#calendar_dropdown').bsCalendar({width: 300});
+        $('#calendar_inline').bsCalendar({width: 500});
 
-        // $('#calendar_inline').bsCalendar({width:400});
-        $('#calendar_dropdown').bsCalendar({width:300});
-        $('#calendar_inline').bsCalendar({width:400});
+
 
     }(jQuery));
 </script>
