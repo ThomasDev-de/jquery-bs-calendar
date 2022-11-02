@@ -13,38 +13,77 @@
     <hr class="border-dark border border-2 w-100">
 
     <div class="row row-cols-2">
-        <div class="col">
+
+        <div class="col d-flex flex-column">
+            <nav class="navbar navbar-expand-lg bg-dark navbar-dark mb-3">
+                <div class="container-fluid">
+                    <a class="navbar-brand" href="#">Navbar</a>
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                            aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" data-bs-auto-close="outside" href="#" role="button"
+                                   data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="fa-regular fa-calendar-days"></i>
+                                </a>
+                                <div class="dropdown-menu">
+                                    <div data-bs-toggle="calendar" id="calendar_navbar"
+                                         data-bs-target="actions.php"></div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+            <button class="btn btn-primary mb-3" type="button" data-bs-toggle="offcanvas"
+                    data-bs-target="#offcanvasExample" aria-controls="offcanvasExample">
+                in offcanvas
+            </button>
             <div class="dropdown-center">
                 <button class="btn btn-secondary dropdown-toggle" data-bs-auto-close="outside" type="button"
                         data-bs-toggle="dropdown" aria-expanded="false">
                     <i class="fa-regular fa-calendar-days"></i>
                 </button>
                 <div class="dropdown-menu p-0">
-                    <div data-bs-toggle="calendar" id="calendar_dropdown" data-bs-target="events.json"></div>
+                    <div data-bs-toggle="calendar" id="calendar_dropdown" data-bs-target="actions.php"></div>
                 </div>
             </div>
         </div>
         <div class="col">
-            <div data-bs-toggle="calendar" id="calendar_inline" class="col shadow rounded" data-bs-target="events.json"></div>
+            <div data-bs-toggle="calendar" id="calendar_inline" class="col shadow rounded"
+                 data-bs-target="actions.php"></div>
         </div>
     </div>
 
 
-    <pre id="log">
-    </pre>
+</div>
+
+<div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasExample" aria-labelledby="offcanvasExampleLabel">
+    <div class="offcanvas-header">
+        <h5 class="offcanvas-title" id="offcanvasExampleLabel">Offcanvas</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body d-flex justify-content-center p-0">
+        <div data-bs-toggle="calendar" id="calendar_offcanvas" class="rounded w-75" data-bs-target="actions.php"></div>
+    </div>
 </div>
 
 
 <script src="../vendor/components/jquery/jquery.min.js"></script>
-<script src="../vendor/moment/moment/min/moment-with-locales.min.js"></script>
 <script src="../vendor/twbs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 <script src="../dist/jquery.bs.calendar.js"></script>
 <script>
     (function ($) {
         $.bsCalendar.setDefault('width', 5000);
         $('#calendar_dropdown').bsCalendar({width: 300});
-        $('#calendar_inline').bsCalendar({width: 500});
-
+        $('#calendar_inline').bsCalendar({width: 300});
+        $('#calendar_offcanvas').bsCalendar({width: '80%'});
+        $('#calendar_navbar').bsCalendar({width: 300});
 
 
     }(jQuery));
