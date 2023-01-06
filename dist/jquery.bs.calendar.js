@@ -1,6 +1,6 @@
 (function ($) {
 
-	Date.DEFAULT_LOCALE = 'en';
+	Date.DEFAULT_LOCALE = 'en-US';
 
 	Date.UNITS = {
 		year: 24 * 60 * 60 * 1000 * 365,
@@ -20,7 +20,7 @@
 		Date.DEFAULT_LOCALE = locale ? locale : Date.DEFAULT_LOCALE;
 	};
 
-	Date.getUnits = function(){
+	Date.getUnits = function () {
 		return Date.UNITS;
 	}
 
@@ -51,6 +51,16 @@
 			return new Date(`2017-${mm}-01T00:00:00+00:00`);
 		});
 		return months.map(date => formatter.format(date));
+	}
+	/**
+	 *
+	 * @param {boolean} abbreviation
+	 * @returns {string}
+	 */
+	Date.prototype.showDateFormatted = function () {
+		let options = {weekday: 'long', year: 'numeric', month: 'short', day: 'numeric'};
+		return this.toLocaleDateString(Date.DEFAULT_LOCALE, options);
+
 	}
 
 	/**
@@ -138,8 +148,10 @@
 			queryParams: function (params) {
 				return params;
 			},
-			editEvent: function(e, event){},
-			deleteEvent: function(e, event){},
+			editEvent: function (e, event) {
+			},
+			deleteEvent: function (e, event) {
+			},
 		}
 	};
 
@@ -240,7 +252,6 @@
 	}
 
 
-
 	/**
 	 * Determine the previous Monday of the current date
 	 * @returns {Date}
@@ -308,6 +319,7 @@
 	}
 
 	function formatDateReadable(date, separator = '.') {
+		return date.showDateFormatted();
 		return date.getDayName() + ' ' + [
 
 			padTo2Digits(date.getDate()),
@@ -397,15 +409,19 @@
 	function drawTemplate(container) {
 		console.log(typeof container);
 		let settings = container.data('settings');
-
+	let today = new Date();
 		container
 			.css({'width': settings.width})
 			.addClass('bg-white')
 			.html(`
+			<div class="p-3 d-flex flex-column text-muted">
+				<small>${today.getDayName()}</small>
+				<h4 class="mb-0">${today.getDate()}. ${today.getMonthName()} ${today.getFullYear()}</h4>
+			</div>
             <div class="d-flex flex-nowrap justify-content-between align-items-center p-2">
-                <a href="#" class="btn btn-link btn-prev-month"><i class="${settings.icons.prev}"></i></a>
-                <span class="month-name"></span>
-                <a href="#" class="btn btn-link btn-next-month"><i class="${settings.icons.next}"></i></a>
+                <a href="#" class="btn btn-light btn-prev-month"><i class="${settings.icons.prev}"></i></a>
+                <a href="#" class="btn btn-light mx-1 flex-fill btn-curr-month month-name"></a>
+                <a href="#" class="btn btn-light btn-next-month"><i class="${settings.icons.next}"></i></a>
             </div>
             <div class="d-flex flex-nowrap align-items-center js-weekdays bg-light">
                 <div class="text-center bg-light"></div>
@@ -414,7 +430,7 @@
             <div class="dates"></div>
             <div class="pt-2 js-collapse" style="display: none">
                 <div class="card mb-0">
-                    <div class="text-center font-weight-bold py-2 js-day-name card-header"></div>
+                    <div class="text-center fw-bold py-2 js-day-name card-header"></div>
                     <div class="js-events list-group list-group-flush"></div>
                 </div>
                 
@@ -466,8 +482,7 @@
 			Date.setLocale(settings.locale);
 			container.data('settings', $.extend($.bsCalendar.getDefaults(container), options || {}));
 			drawTemplate(container);
-		}
-		else {
+		} else {
 			settings = container.data('settings');
 		}
 
@@ -535,10 +550,19 @@
 				});
 			}
 
+			let currentWeek = today.getWeek();
+			let currentYear = today.getFullYear();
+
 			calendar.forEach(week => {
+
+				let w = week.days[0].getWeek();
+				let highlight_week = currentYear === week.days[0].getFullYear() && currentWeek === w;
+				let highlightClass = highlight_week ? 'fw-bold text-dark' : '';
+
 				let weekContainer = $('<div>', {
 					class: 'd-flex flex-nowrap'
 				}).appendTo(wrap);
+
 				// calendar week
 				$('<div>', {
 					class: 'd-flex justify-content-center align-items-center js-cal-row bg-light',
@@ -549,7 +573,7 @@
 						height: cellWidthHeight
 					},
 					html: [
-						'<small class="text-center mb-0">' + week.days[0].getWeek() + '</small>'
+						'<small class="text-center mb-0 '+highlightClass+'">' + w + '</small>'
 					].join('')
 				}).appendTo(weekContainer);
 
@@ -636,7 +660,7 @@
 
 					current = new Date();
 					drawCalendar(current);
-					container.find('.js-collapse').hide(function(){
+					container.find('.js-collapse').hide(function () {
 						container.triggerAll('click-current-month change-month');
 					});
 				})
@@ -649,17 +673,24 @@
 
 					current = current.clone().subMonths(1);
 					drawCalendar(current);
-					container.find('.js-collapse').hide(function(){
+					container.find('.js-collapse').hide(function () {
 						container.triggerAll('click-prev-month change-month');
 					});
+				})
+				.on('click', '.btn-curr-month', function (e) {
+					e.preventDefault();
 
-
+					current = today.clone();
+					drawCalendar(current);
+					container.find('.js-collapse').hide(function () {
+						container.triggerAll('click-current-month change-month');
+					});
 				})
 				.on('click', '.btn-next-month', function (e) {
 					e.preventDefault();
 					current = current.clone().addMonths(1);
 					drawCalendar(current);
-					container.find('.js-collapse').hide(function(){
+					container.find('.js-collapse').hide(function () {
 						container.triggerAll('click-next-month change-month');
 					});
 
@@ -670,7 +701,7 @@
 					$column.removeClass('border-white').addClass('border-secondary')
 					let date = new Date($column.data('date'));
 					let events = $column.data('events');
-					container.find('.js-day-name').html(formatDateReadable(date));
+					container.find('.js-day-name').html(date.showDateFormatted());
 					drawEventList(container, events, date);
 					container.find('.js-collapse').show();
 					container.trigger('change-day', [date, events]);
@@ -712,11 +743,11 @@
 				});
 			}
 
-			setTimeout(function(){
+			setTimeout(function () {
 				container.trigger('shown-event-list', [events]);
 				eventList.find('[data-bs-toggle="tooltip"]').tooltip();
 				eventList.find('[data-bs-toggle="popover"]').popover();
-			},0);
+			}, 0);
 
 		}
 
@@ -757,8 +788,8 @@
 			return container;
 		}
 
-		if(isMethodSet){
-			switch(options){
+		if (isMethodSet) {
+			switch (options) {
 				case 'refresh':
 					drawCalendar(current);
 					break;
