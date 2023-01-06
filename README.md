@@ -30,16 +30,18 @@ let options = {
     "Dezember"
   ],
     "icons": {
-    "prev": "fa-solid fa-arrow-left fa-fw",
-    "next": "fa-solid fa-arrow-right fa-fw",
-    "eventEdit": "fa-solid fa-edit fa-fw",
-    "eventRemove": "fa-solid fa-trash fa-fw"
+        "prev": "fa-solid fa-arrow-left fa-fw",
+        "next": "fa-solid fa-arrow-right fa-fw",
+        "eventEdit": "fa-solid fa-edit fa-fw",
+        "eventRemove": "fa-solid fa-trash fa-fw"
     },
     "showEventEditButton": false,
     "showEventRemoveButton": false,
     "formatEvent": function (event) {},
     "formatNoEvent": function (date) {},
-    "queryParams": function (params) {}
+    "queryParams": function (params) {},
+    "editEvent": function (e, event){}, 
+    "deleteEvent": function (e, event){}, 
 }
 ```
 
@@ -53,6 +55,8 @@ let options = {
   "start": "2022-10-30 10:00:00",
   "end": "2022-10-30 12:30:00",
   "link": "",
+  "editable": true,
+  "deletable": true,
   "whatever": "you want..."
 }
 ```

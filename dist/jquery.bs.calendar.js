@@ -38,16 +38,19 @@
 			},
 			queryParams: function (params) {
 				return params;
-			}
+			},
+			editEvent: function(e, event){},
+			deleteEvent: function(e, event){},
 		}
 	};
 
 	let eventEditButton = {
-		class: 'btn btn-link p-0',
+		class: 'btn btn-link p-0 .js-edit-event',
 		icon: '',
 	};
+
 	let eventRemoveButton = {
-		class: 'btn btn-link p-0',
+		class: 'btn btn-link p-0 .js-delete-event',
 		icon: 'fa-solid fa-trash fa-fw'
 	};
 
@@ -337,12 +340,19 @@
 		let xhr = null;
 		let current = new Date();
 
+		let isOptionsSet = typeof options === 'object';
+		let isMethodSet = typeof options === 'string';
 
-		let settings = $.extend($.bsCalendar.getDefaults(container), options || {});
+
+		let settings;
 
 		if (container.data('init') !== true) {
+			settings = $.extend($.bsCalendar.getDefaults(container), options || {});
 			container.data('settings', $.extend($.bsCalendar.getDefaults(container), options || {}));
 			drawTemplate(container);
+		}
+		else {
+			settings = container.data('settings');
 		}
 
 
@@ -584,34 +594,41 @@
 					eventWrapper.data('event', event);
 				});
 			}
+
 			setTimeout(function(){
 				container.trigger('shown-event-list', [events]);
+				eventList.find('[data-bs-toggle="tooltip"]').tooltip();
+				eventList.find('[data-bs-toggle="popover"]').popover();
 			},0);
 
 		}
 
 		function getEventButtons(container, event, wrap) {
 			let settings = container.data('settings');
-			if (settings.showEventEditButton) {
+			let editable = !event.hasOwnProperty('editable') || event.editable;
+			let deletable = !event.hasOwnProperty('deletable') || event.deletable;
+			if (settings.showEventEditButton && editable) {
 				let editButton = $('<a>', {
 					href: '#',
 					class: eventEditButton.class,
 					html: `<i class="${settings.icons.eventEdit}"></i>`
 				}).appendTo(wrap);
+
 				editButton.on('click', function (e) {
 					e.preventDefault();
-					container.trigger('event-edit', [event]);
+					settings.editEvent(e, event);
 				});
 			}
-			if (settings.showEventRemoveButton) {
+			if (settings.showEventRemoveButton && deletable) {
 				let removeButton = $('<a>', {
 					href: '#',
 					class: eventRemoveButton.class,
 					html: `<i class="${settings.icons.eventRemove}"></i>`
 				}).appendTo(wrap);
+
 				removeButton.on('click', function (e) {
 					e.preventDefault();
-					container.trigger('event-remove', [event]);
+					settings.deleteEvent(e, event);
 				});
 			}
 		}
@@ -622,6 +639,14 @@
 			events();
 			container.trigger('init');
 			return container;
+		}
+
+		if(isMethodSet){
+			switch(options){
+				case 'refresh':
+					drawCalendar(current);
+					break;
+			}
 		}
 
 		return init();
