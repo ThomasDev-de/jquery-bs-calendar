@@ -67,12 +67,13 @@ $.bsCalendar.setDefault(prop, value);
 
 ```js
 $('calendar')
-    .on('init', function (e) {
-    })
-    .on('change-day', function (e, date, events) {
-    })
-    .on('click-event', function (e, event) {
-    })
-    .on('events-loaded', function (e, events) {
-    })
+    .on('init', function (e) {})
+    .on('change-day', function (e, date, events) {})
+    .on('click-event', function (e, event) {})
+    .on('events-loaded', function (e, events) {})
+    .on('show-event-list', function (e, events) {})
+    .on('shown-event-list', function (e, events) {})
+    .on('click-current-month', function (e) {})
+    .on('click-prev-month', function (e) {})
+    .on('change-month', function (e) {})
 ```
