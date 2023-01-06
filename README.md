@@ -4,31 +4,9 @@
 
 ```javascript
 let options = {
+  "locale": "de", // default 'en'
   "url": null,
-  "width": 310,
-  "weekdays": [
-    "Mo",
-    "Di",
-    "Mi",
-    "Do",
-    "Fr",
-    "Sa",
-    "So"
-  ],
-  "months": [
-    "Januar",
-    "Februar",
-    "März",
-    "April",
-    "Mai",
-    "Juni",
-    "Juli",
-    "August",
-    "September",
-    "Oktober",
-    "November",
-    "Dezember"
-  ],
+  "width": "310px",
     "icons": {
         "prev": "fa-solid fa-arrow-left fa-fw",
         "next": "fa-solid fa-arrow-right fa-fw",

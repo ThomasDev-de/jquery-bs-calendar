@@ -1,4 +1,104 @@
 (function ($) {
+
+	Date.DEFAULT_LOCALE = 'en';
+
+	Date.UNITS = {
+		year: 24 * 60 * 60 * 1000 * 365,
+		month: 24 * 60 * 60 * 1000 * 365 / 12,
+		week: 24 * 60 * 60 * 1000 * 7,
+		day: 24 * 60 * 60 * 1000,
+		hour: 60 * 60 * 1000,
+		minute: 60 * 1000,
+		second: 1000
+	}
+
+	/**
+	 *
+	 * @param {string} locale
+	 */
+	Date.setLocale = function (locale) {
+		Date.DEFAULT_LOCALE = locale ? locale : Date.DEFAULT_LOCALE;
+	};
+
+	Date.getUnits = function(){
+		return Date.UNITS;
+	}
+
+
+	/**
+	 *
+	 * @param {boolean} abbreviation
+	 * @returns {string[]}
+	 */
+	Date.getDayNames = function (abbreviation = false) {
+		const formatter = new Intl.DateTimeFormat(Date.DEFAULT_LOCALE, {weekday: abbreviation ? 'short' : 'long', timeZone: 'UTC'});
+		const days = [2, 3, 4, 5, 6, 7, 8].map(day => {
+			const dd = day < 10 ? `0${day}` : day;
+			return new Date(`2017-01-${dd}T00:00:00+00:00`);
+		});
+		return days.map(date => formatter.format(date));
+	}
+
+	/**
+	 *
+	 * @param {boolean} abbreviation
+	 * @returns {string[]}
+	 */
+	Date.getMonthNames = function (abbreviation = false) {
+		const formatter = new Intl.DateTimeFormat(Date.DEFAULT_LOCALE, {month: abbreviation ? 'short' : 'long', timeZone: 'UTC'});
+		const months = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map(month => {
+			const mm = month < 10 ? `0${month}` : month;
+			return new Date(`2017-${mm}-01T00:00:00+00:00`);
+		});
+		return months.map(date => formatter.format(date));
+	}
+
+	/**
+	 *
+	 * @returns {Date}
+	 */
+	Date.prototype.copy = function () {
+		return this.clone();
+	}
+
+
+	/**
+	 *
+	 * @param {boolean} abbreviation
+	 * @return {string}
+	 */
+	Date.prototype.getMonthName = function (abbreviation = false) {
+		const formatter = new Intl.DateTimeFormat(Date.DEFAULT_LOCALE, {month: abbreviation ? 'short' : 'long', timeZone: 'UTC'});
+		return formatter.format(this);
+	};
+
+	/**
+	 * Determine the number of days in the current month
+	 * @returns {number}
+	 */
+	Date.prototype.getDaysInMonth = function () {
+		return [31, (this.isLeapYear() ? 29 : 28), 31, 30, 31, 30, 31, 31, 30, 31, 30, 31][this.getMonth()];
+	};
+
+	/**
+	 * Checks if the year of the date is a leap year
+	 * @returns {boolean}
+	 */
+	Date.prototype.isLeapYear = function () {
+		let year = this.getFullYear();
+		return (((year % 4 === 0) && (year % 100 !== 0)) || (year % 400 === 0));
+	};
+
+	/**
+	 *
+	 * @param {boolean} abbreviation
+	 * @return {string}
+	 */
+	Date.prototype.getDayName = function (abbreviation = false) {
+		const formatter = new Intl.DateTimeFormat(Date.DEFAULT_LOCALE, {weekday: abbreviation ? 'short' : 'long', timeZone: 'UTC'});
+		return formatter.format(this);
+	};
+
 	$.fn.extend({
 		triggerAll: function (events, params) {
 			let el = this, i, evts = events.split(' ');
@@ -18,10 +118,9 @@
 			return this.DEFAULTS;
 		},
 		DEFAULTS: {
+			locale: 'en',
 			url: null,
 			width: '300px',
-			weekdays: ['M', 'D', 'M', 'D', 'F', 'S', 'S'],
-			months: ['Januar', 'Februar', 'März', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember'],
 			icons: {
 				prev: 'fa-solid fa-arrow-left fa-fw',
 				next: 'fa-solid fa-arrow-right fa-fw',
@@ -77,15 +176,17 @@
 	}
 
 	/**
-	 *
-	 * @param month
+	 * Subtracts a specified number of months from the date
+	 * @param {number} months
 	 * @returns {Date}
 	 */
-	Date.prototype.subMonths = function (month) {
-		let date = new Date(this.valueOf());
-		date.setMonth(date.getMonth() - month);
-
-		return date;
+	Date.prototype.subMonths = function (months) {
+		const month = this.getMonth();
+		this.setMonth(this.getMonth() - months);
+		while (this.getMonth() === month) {
+			this.subDays(1);
+		}
+		return this;
 	}
 	/**
 	 *
@@ -96,46 +197,31 @@
 		return (((year % 4 === 0) && (year % 100 !== 0)) || (year % 400 === 0));
 	};
 
-	/**
-	 *
-	 * @param year
-	 * @param month
-	 * @returns {number|number}
-	 */
-	Date.getDaysInMonth = function (year, month) {
-		return [31, (Date.isLeapYear(year) ? 29 : 28), 31, 30, 31, 30, 31, 31, 30, 31, 30, 31][month];
-	};
-	/**
-	 *
-	 * @returns {number}
-	 */
-	Date.prototype.getDaysInMonth = function () {
-		return Date.getDaysInMonth(this.getFullYear(), this.getMonth());
-	};
 
 	/**
-	 *
-	 * @param value
+	 * Adds a specified number of months to the date
+	 * @param {number} months
 	 * @returns {Date}
 	 */
-	Date.prototype.addMonths = function (value) {
+	Date.prototype.addMonths = function (months) {
 		let n = this.getDate();
 		this.setDate(1);
-		this.setMonth(this.getMonth() + value);
+		this.setMonth(this.getMonth() + months);
 		this.setDate(Math.min(n, this.getDaysInMonth()));
 		return this;
 	};
 
 	/**
-	 *
+	 * Determine the first day of the current month
 	 * @returns {Date}
 	 */
 	Date.prototype.getFirstDayOfMonth = function () {
 		return new Date(this.getFullYear(), this.getMonth(), 1);
 	}
 
+
 	/**
-	 *
+	 * Determine the last day of the current month
 	 * @returns {Date}
 	 */
 	Date.prototype.getLastDayOfMonth = function () {
@@ -151,6 +237,32 @@
 		let day = d.getDay(),
 			diff = d.getDate() - day + (day === 0 ? -6 : 1); // adjust when day is sunday
 		return new Date(d.setDate(diff));
+	}
+
+
+
+	/**
+	 * Determine the previous Monday of the current date
+	 * @returns {Date}
+	 */
+	Date.prototype.getFirstDayOfWeek = function () {
+		let d = this.copy();
+		let day = d.getDay(),
+			diff = d.getDate() - day + (day === 0 ? -6 : 1); // adjust when day is sunday
+		return new Date(d.setDate(diff));
+	}
+
+
+	/**
+	 * Determine the Sunday of the current date
+	 * @returns {Date}
+	 */
+	Date.prototype.getLastDayOfWeek = function () {
+		let d = this.clone();
+		const first = d.getDate() - d.getDay() + 1;
+		const last = first + 6;
+
+		return new Date(d.setDate(last));
 	}
 
 	/**
@@ -196,7 +308,8 @@
 	}
 
 	function formatDateReadable(date, separator = '.') {
-		return [
+		return date.getDayName() + ' ' + [
+
 			padTo2Digits(date.getDate()),
 			padTo2Digits(date.getMonth() + 1),
 			date.getFullYear(),
@@ -319,7 +432,8 @@
 		};
 		container.find('.js-weekdays div:first').css(cellCss);
 
-		settings.weekdays.forEach(wd => {
+
+		Date.getDayNames(true).forEach(wd => {
 			$('<div>', {
 				html: wd,
 				class: 'text-center bg-light',
@@ -347,7 +461,9 @@
 		let settings;
 
 		if (container.data('init') !== true) {
+
 			settings = $.extend($.bsCalendar.getDefaults(container), options || {});
+			Date.setLocale(settings.locale);
 			container.data('settings', $.extend($.bsCalendar.getDefaults(container), options || {}));
 			drawTemplate(container);
 		}
@@ -379,8 +495,8 @@
 				callback([]);
 			} else {
 				let data = {
-					from: selected.clone().getFirstDayOfMonth().getMonday().formatDate(false),
-					to: selected.clone().getLastDayOfMonth().getSunday().formatDate(false)
+					from: selected.clone().getFirstDayOfMonth().getFirstDayOfWeek().formatDate(false),
+					to: selected.clone().getLastDayOfMonth().getLastDayOfWeek().formatDate(false)
 				};
 				xhr = $.ajax({
 					url: settings.url,
@@ -406,7 +522,8 @@
 
 			let date = startDay.clone().subDays(1);
 
-			container.find('.month-name').html(settings.months[selectedDate.getMonth()] + ' ' + selectedDate.getFullYear());
+			container.find('.month-name').html(selectedDate.getMonthName() + ' ' + selectedDate.getFullYear());
+			// container.find('.month-name').html(settings.months[selectedDate.getMonth()] + ' ' + selectedDate.getFullYear());
 
 			calendar = [];
 			while (date < endDay) {
@@ -634,7 +751,6 @@
 		}
 
 		function init() {
-
 			drawCalendar(today);
 			events();
 			container.trigger('init');
