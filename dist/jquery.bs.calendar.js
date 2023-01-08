@@ -651,19 +651,18 @@
 		 */
 		function events() {
 			container
-				.on('click', '.btn-close-events', function (e) {
-					e.preventDefault();
-					container.find('.js-collapse').hide();
-				})
-				.on('click', '.btn-current-month', function (e) {
-					e.preventDefault();
-
-					current = new Date();
-					drawCalendar(current);
-					container.find('.js-collapse').hide(function () {
-						container.triggerAll('click-current-month change-month');
-					});
-				})
+				// .on('click', '.btn-close-events', function (e) {
+				// 	e.preventDefault();
+				// 	container.find('.js-collapse').hide();
+				// })
+				// .on('click', '.btn-current-month', function (e) {
+				// 	e.preventDefault();
+				// 	current = new Date();
+				// 	drawCalendar(current);
+				// 	container.find('.js-collapse').hide(function () {
+				// 		container.triggerAll('click-current-month change-month');
+				// 	});
+				// })
 				.on('click', '.js-event', function (e) {
 					let event = $(e.currentTarget).data('event');
 					container.trigger('click-event', [event]);
