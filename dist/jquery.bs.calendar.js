@@ -148,9 +148,9 @@
 			queryParams: function (params) {
 				return params;
 			},
-			editEvent: function (e, event) {
+			onClickEditEvent: function (e, event) {
 			},
-			deleteEvent: function (e, event) {
+			onClickDeleteEvent: function (e, event) {
 			},
 		}
 	};
@@ -409,7 +409,7 @@
 	function drawTemplate(container) {
 		console.log(typeof container);
 		let settings = container.data('settings');
-	let today = new Date();
+		let today = new Date();
 		container
 			.css({'width': settings.width})
 			.addClass('bg-white')
@@ -461,9 +461,10 @@
 	/**
 	 *
 	 * @param {object|null} options
+	 * @param {object|null|string|Date} options
 	 * @returns {*|jQuery|HTMLElement}
 	 */
-	$.fn.bsCalendar = function (options) {
+	$.fn.bsCalendar = function (options, params) {
 
 		const container = $(this);
 		const today = new Date();
@@ -528,8 +529,15 @@
 		/**
 		 *
 		 * @param {Date} selectedDate
+		 * @param {null|string} clickDate
 		 */
-		function drawCalendar(selectedDate) {
+		function drawCalendar(selectedDate, clickDate = null) {
+
+			// if(clickDate !== null){
+			// 	selectedDate = new Date(clickDate);
+			// }
+
+			let activeDate = container.find('[data-date].active').length ? container.find('[data-date].active').data('date') : null;
 
 			let wrap = container.find('.js-weeks').empty();
 			const startDay = selectedDate.clone().getFirstDayOfMonth().getMonday();
@@ -573,7 +581,7 @@
 						height: cellWidthHeight
 					},
 					html: [
-						'<small class="text-center mb-0 '+highlightClass+'">' + w + '</small>'
+						'<small class="text-center mb-0 ' + highlightClass + '">' + w + '</small>'
 					].join('')
 				}).appendTo(weekContainer);
 
@@ -606,7 +614,6 @@
 				});
 			});
 
-
 			getEvents(container, selectedDate, function (events) {
 				let haveEventsToday = false;
 				events.forEach(event => {
@@ -638,11 +645,19 @@
 					} while (currDaysFormatted < end.formatDate(false));
 				});
 
-				if (haveEventsToday) {
-					container.find('.js-today').click();
-				}
+				// alert();
 
-				// console.log(events);
+				// if (clickDate !== null) {
+				// 	container.find('[data-date="' + clickDate + '"]').trigger('click');
+				// } else
+					if (activeDate !== null && container.find('[data-date="' + activeDate + '"]').length) {
+					container.find('[data-date="' + activeDate + '"]').trigger('click');
+				} else {
+					// Today is in the current month ?
+					if (container.find('.js-today').length) {
+						container.find('.js-today').trigger('click');
+					}
+				}
 			});
 		}
 
@@ -651,18 +666,6 @@
 		 */
 		function events() {
 			container
-				// .on('click', '.btn-close-events', function (e) {
-				// 	e.preventDefault();
-				// 	container.find('.js-collapse').hide();
-				// })
-				// .on('click', '.btn-current-month', function (e) {
-				// 	e.preventDefault();
-				// 	current = new Date();
-				// 	drawCalendar(current);
-				// 	container.find('.js-collapse').hide(function () {
-				// 		container.triggerAll('click-current-month change-month');
-				// 	});
-				// })
 				.on('click', '.js-event', function (e) {
 					let event = $(e.currentTarget).data('event');
 					container.trigger('click-event', [event]);
@@ -696,8 +699,12 @@
 				})
 				.on('click', '[data-date]', function (e) {
 					let $column = $(e.currentTarget);
-					container.find('.js-weeks').find('[data-date].border-secondary').removeClass('border-secondary').addClass('border-white');
-					$column.removeClass('border-white').addClass('border-secondary')
+					container
+						.find('.js-weeks')
+						.find('[data-date].border-secondary')
+						.removeClass('border-secondary active')
+						.addClass('border-white')
+					$column.removeClass('border-white').addClass('border-secondary active')
 					let date = new Date($column.data('date'));
 					let events = $column.data('events');
 					container.find('.js-day-name').html(date.showDateFormatted());
@@ -763,7 +770,7 @@
 
 				editButton.on('click', function (e) {
 					e.preventDefault();
-					settings.editEvent(e, event);
+					settings.onClickEditEvent(e, event);
 				});
 			}
 			if (settings.showEventRemoveButton && deletable) {
@@ -775,15 +782,19 @@
 
 				removeButton.on('click', function (e) {
 					e.preventDefault();
-					settings.deleteEvent(e, event);
+					settings.onClickDeleteEvent(e, event);
 				});
 			}
 		}
 
 		function init() {
-			drawCalendar(today);
-			events();
-			container.trigger('init');
+			if (!container.data('init')) {
+				drawCalendar(today);
+				events();
+
+				container.data('init', true);
+				container.trigger('init');
+			}
 			return container;
 		}
 
@@ -792,6 +803,9 @@
 				case 'refresh':
 					drawCalendar(current);
 					break;
+				// case 'setDate':
+				// 	drawCalendar(current, params);
+				// 	break;
 			}
 		}
 

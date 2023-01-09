@@ -20,8 +20,8 @@ let options = {
     "formatEvent": function (event) {}, // Here you can change the display of the dates.
     "formatNoEvent": function (date) {}, // The display when there are no appointments on the selected date.
     "queryParams": function (params) {}, // Additional parameters can be sent to the server here. From and To are always sent.
-    "editEvent": function (e, event){}, // What should happen when the edit button is clicked at the appointment?
-    "deleteEvent": function (e, event){}, // What should happen when the delete button is clicked at the appointment?
+    "onClickEditEvent": function (e, event){}, // What should happen when the edit button is clicked at the appointment?
+    "onClickDeleteEvent": function (e, event){}, // What should happen when the delete button is clicked at the appointment?
 }
 ```
 
