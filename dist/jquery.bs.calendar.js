@@ -123,10 +123,17 @@
     };
 
     $.fn.extend({
-        triggerAll: function (events, params) {
-            let el = this, i, evts = events.split(' ');
-            for (i = 0; i < evts.length; i += 1) {
-                el.trigger(evts[i], params);
+        /**
+         * Triggers multiple events on a given element.
+         *
+         * @param {String} events - A space-separated string of event names to trigger.
+         * @param {Object|undefined|array} params - Optional parameters to pass to the event handlers.
+         * @returns {jQuery} - The element on which the events were triggered.
+         */
+        triggerAll: function (events, params = []) {
+            let el = this, i, eventArray = events.split(' ');
+            for (i = 0; i < eventArray.length; i += 1) {
+                el.trigger(eventArray[i], params);
             }
             return el;
         }
@@ -349,7 +356,7 @@
         d.setUTCDate(d.getUTCDate() + 4 - (d.getUTCDay() || 7));
         // Get first day of year
         let yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
-        // Calculate full weeks to the nearest Thursday and return  week number
+        // Calculate full weeks to the nearest Thursday and return week number
         return Math.ceil((((d - yearStart) / 86400000) + 1) / 7);
     }
 
@@ -406,9 +413,12 @@
         `;
     }
 
+    // noinspection JSUnusedLocalSymbols
     /**
-     * @param {Date} date
-     * @returns {string}
+     * Draws a no event message on the specified date.
+     *
+     * @param {Date} date - The date for which the no event message should be drawn.
+     * @return {string} - The HTML markup for the no event message.
      */
     function drawNoEvent(date) {
         return `
@@ -510,18 +520,21 @@
             })
         }
 
+        /**
+         *
+         * @type {jQuery|HTMLElement|*}
+         */
         const container = $(this);
         let xhr = null;
 
-        let isOptionsSet = typeof options === 'object';
         let isMethodSet = typeof options === 'string';
 
         let settings;
 
         if (container.data('init') !== true) {
-            settings = $.extend($.bsCalendar.getDefaults(container), options || {});
+            settings = $.extend(true, $.bsCalendar.getDefaults(container), options || {});
             Date.setLocale(settings.locale);
-            container.data('settings', $.extend($.bsCalendar.getDefaults(container), options || {}));
+            container.data('settings', $.extend(true, $.bsCalendar.getDefaults(container), options || {}));
             drawTemplate(container);
         } else {
             settings = container.data('settings');
@@ -531,6 +544,7 @@
         let fontSize = cellWidthHeight / 3; // 7 days + calendar week
         let calendar = [];
 
+        // noinspection JSUnusedLocalSymbols
         /**
          * Checks if the current theme is dark mode.
          *
@@ -687,7 +701,6 @@
                         if (column.length) {
                             let dataEvents = column.data('events');
                             dataEvents.push(event);
-                            let highlightClass = column.hasClass('js-today') ? 'bg-white' : isDarkMode() ? 'bg-light' : 'bg-dark';
                             column
                                 .data('events', dataEvents)
                                 .find(`.js-count-events`)
@@ -768,13 +781,13 @@
         /**
          * Draws the event list in the specified container with the given events and date.
          *
-         * @param {object} container - The DOM element (jQuery object) where the event list will be displayed.
+         * @param {jQuery} container - The DOM element (jQuery object) where the event list will be displayed.
          * @param {array} events - An array of events to be displayed in the event list.
          * @param {Date} date - The date used for formatting purposes.
          */
         function drawEventList(container, events, date) {
-            container.trigger('show-event-list', [events]);
-            let eventList = container.find('.js-events');
+            $(container).trigger('show-event-list', [events]);
+            let eventList = $(container).find('.js-events');
             eventList.empty();
             if (!events.length) {
                 $('<div>', {
@@ -796,9 +809,7 @@
             }
 
             setTimeout(function () {
-                container.trigger('shown-event-list', [events]);
-                eventList.find('[data-bs-toggle="tooltip"]').tooltip();
-                eventList.find('[data-bs-toggle="popover"]').popover();
+                $(container).trigger('shown-event-list', [events]);
             }, 0);
 
         }
@@ -811,7 +822,7 @@
          * @param {jQuery} wrap - The jQuery object representing the wrap element.
          */
         function getEventButtons(container, event, wrap) {
-            let settings = container.data('settings');
+            let settings = $(container).data('settings');
             let editable = !event.hasOwnProperty('editable') || event.editable;
             let deletable = !event.hasOwnProperty('deletable') || event.deletable;
             if (settings.showEventEditButton && editable) {
