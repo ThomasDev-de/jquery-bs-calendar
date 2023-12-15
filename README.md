@@ -55,7 +55,13 @@ The event object must have a start and an end attribute
 This function can be used to define default values, such as the language before initialization.
 
 ```js
+// set single property
 $.bsCalendar.setDefault(prop, value);
+// or multiple properties
+$.bsCalendar.setDefaults({
+    prop: value,
+    prop2: value2
+});
 ```
 
 ### methods
@@ -74,8 +80,7 @@ $('#calendar').bsCalendar(method, param);
 
 ```js
 $('#calendar')
-    .on('eventName', function (e, ...params) {
-    });
+    .on('eventName', function (e, ...params) {});
 ```
 
 | eventName           | params       | Description                                                    |
@@ -92,22 +97,13 @@ $('#calendar')
 
 ```js
 $('#calendar')
-    .on('init', function (e) {
-    })
-    .on('change-day', function (e, date, events) {
-    })
-    .on('events-loaded', function (e, events) {
-    })
-    .on('show-event-list', function (e, events) {
-    })
-    .on('shown-event-list', function (e, events) {
-    })
-    .on('click-current-month', function (e) {
-    })
-    .on('click-prev-month', function (e) {
-    })
-    .on('click-next-month', function (e) {
-    })
-    .on('change-month', function (e) {
-    })
+    .on('init', function (e) {})
+    .on('change-day', function (e, date, events) {})
+    .on('events-loaded', function (e, events) {})
+    .on('show-event-list', function (e, events) {})
+    .on('shown-event-list', function (e, events) {})
+    .on('click-current-month', function (e) {})
+    .on('click-prev-month', function (e) {})
+    .on('click-next-month', function (e) {})
+    .on('change-month', function (e) {})
 ```
