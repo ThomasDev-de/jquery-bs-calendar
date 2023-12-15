@@ -749,12 +749,12 @@
                 })
                 .on('click', '[data-date]', function (e) {
                     let $column = $(e.currentTarget);
-                    container
-                        .find('.js-weeks')
-                        .find('[data-date].border-secondary')
-                        .removeClass('border-secondary active')
-                        .addClass('border-white')
-                    $column.removeClass('border-white').addClass('border-secondary active')
+                    // container
+                    //     .find('.js-weeks')
+                    //     .find('[data-date].border-secondary')
+                    //     .removeClass('border-secondary active')
+                    //     .addClass('border-white')
+                    // $column.removeClass('border-white').addClass('border-secondary active')
                     let date = new Date($column.data('date'));
                     let events = $column.data('events');
                     container.find('.js-day-name').html(date.showDateFormatted());
