@@ -10,7 +10,7 @@ let options = {
     "locale": "de", // Sets the language of days and months (default 'en-US')
     "url": null, // The URL to the endpoint where the dates will be loaded.
     "width": "310px", // Sets the width of the container. All subelements are calculated from the width of the container.
-    "icons": { // Here you can change the icon classes. FontAwesome icons are set as default.
+    "icons": { // Here you can change the icon classes. Bootstrap icons are set as default.
         "prev": 'bi bi-chevron-left',
         "next": 'bi bi-chevron-right',
         "eventEdit": 'bi bi-pen',
