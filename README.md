@@ -1,7 +1,8 @@
 # jquery-bs-calendar
-
+![promo image](demo/img/promo.png)  
 The event calendar was created with JQuery and Boostrap 5. It does not need any additional CSS file.  
 The calendar can be included in all Boostrap elements (.card, .navbar, .offcanvas, .dropdowns, ...).
+
 ### options
 
 ```javascript
@@ -10,18 +11,24 @@ let options = {
     "url": null, // The URL to the endpoint where the dates will be loaded.
     "width": "310px", // Sets the width of the container. All subelements are calculated from the width of the container.
     "icons": { // Here you can change the icon classes. FontAwesome icons are set as default.
-        "prev": "fa-solid fa-arrow-left fa-fw",
-        "next": "fa-solid fa-arrow-right fa-fw",
-        "eventEdit": "fa-solid fa-edit fa-fw",
-        "eventRemove": "fa-solid fa-trash fa-fw"
+        "prev": 'bi bi-chevron-left',
+        "next": 'bi bi-chevron-right',
+        "eventEdit": 'bi bi-pen',
+        "eventRemove": 'bi bi-calendar2-x'
     },
+    "showTodayHeader": true, // Show or hide the header of the calendar, which contains information about today
     "showEventEditButton": false, // Should an edit button appear on all appointments?
     "showEventRemoveButton": false, // Should a delete button appear for all appointments?
-    "formatEvent": function (event) {}, // Here you can change the display of the dates.
-    "formatNoEvent": function (date) {}, // The display when there are no appointments on the selected date.
-    "queryParams": function (params) {}, // Additional parameters can be sent to the server here. From and To are always sent.
-    "onClickEditEvent": function (e, event){}, // What should happen when the edit button is clicked at the appointment?
-    "onClickDeleteEvent": function (e, event){}, // What should happen when the delete button is clicked at the appointment?
+    "formatEvent": function (event) {
+    }, // Here you can change the display of the dates.
+    "formatNoEvent": function (date) {
+    }, // The display when there are no appointments on the selected date.
+    "queryParams": function (params) {
+    }, // Additional parameters can be sent to the server here. From and To are always sent.
+    "onClickEditEvent": function (e, event) {
+    }, // What should happen when the edit button is clicked at the appointment?
+    "onClickDeleteEvent": function (e, event) {
+    }, // What should happen when the delete button is clicked at the appointment?
 }
 ```
 
@@ -52,21 +59,24 @@ $.bsCalendar.setDefault(prop, value);
 ```
 
 ### methods
+
 ```js
 $('#calendar').bsCalendar(method, param);
 ```
 
-| methodName | Params | Description       |
-|------------|--------|-------------------|
-| refresh    | -      | Reloads the dates |
-
+| methodName    | Params                 | Description                                           |
+|---------------|------------------------|-------------------------------------------------------|
+| refresh       | -                      | Reloads the dates                                     |
+| updateOptions | (object) {new:options} | Updates the options of the calendar                   |
+| setDate       | (string) '2024-12-24'  | Switches the calendar to the month given in the date. |
 
 ### events
+
 ```js
 $('#calendar')
-    .on('eventName', function (e, ...params) {});
+    .on('eventName', function (e, ...params) {
+    });
 ```
-
 
 | eventName           | params       | Description                                                    |
 |---------------------|--------------|----------------------------------------------------------------|
@@ -79,15 +89,25 @@ $('#calendar')
 | click-prev-month    | -            | Fires when the button for the previous month is pressed        |
 | click-next-month    | -            | Fires when the button for the next month has been pressed      |
 | change-month        | -            | Fires when the month is changed                                |
+
 ```js
 $('#calendar')
-    .on('init', function (e) {})
-    .on('change-day', function (e, date, events) {})
-    .on('events-loaded', function (e, events) {})
-    .on('show-event-list', function (e, events) {})
-    .on('shown-event-list', function (e, events) {})
-    .on('click-current-month', function (e) {})
-    .on('click-prev-month', function (e) {})
-    .on('click-next-month', function (e) {})
-    .on('change-month', function (e) {})
+    .on('init', function (e) {
+    })
+    .on('change-day', function (e, date, events) {
+    })
+    .on('events-loaded', function (e, events) {
+    })
+    .on('show-event-list', function (e, events) {
+    })
+    .on('shown-event-list', function (e, events) {
+    })
+    .on('click-current-month', function (e) {
+    })
+    .on('click-prev-month', function (e) {
+    })
+    .on('click-next-month', function (e) {
+    })
+    .on('change-month', function (e) {
+    })
 ```
