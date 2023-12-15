@@ -407,9 +407,10 @@
     }
 
     /**
+     * @param {Date} date
      * @returns {string}
      */
-    function drawNoEvent() {
+    function drawNoEvent(date) {
         return `
         <div class="p-2" style="font-size:.8em">
         <h6 class="mb-0 text-center">No appointments on this day</h6>

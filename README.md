@@ -6,7 +6,7 @@ The calendar can be included in all Boostrap elements (.card, .navbar, .offcanva
 ### options
 
 ```javascript
-let options = {
+const options = {
     "locale": "de", // Sets the language of days and months (default 'en-US')
     "url": null, // The URL to the endpoint where the dates will be loaded.
     "width": "310px", // Sets the width of the container. All subelements are calculated from the width of the container.
