@@ -16,7 +16,7 @@ const options = {
         "eventEdit": 'bi bi-pen',
         "eventRemove": 'bi bi-calendar2-x'
     },
-    "showTodayHeader": true, // Show or hide the header of the calendar, which contains information about today
+    "showTodayHeader": true, // Show or hide the header of the calendar, which contains information about today.
     "showEventEditButton": false, // Should an edit button appear on all appointments?
     "showEventRemoveButton": false, // Should a delete button appear for all appointments?
     "showPopover": true, // If the value is true, a popover will pop up on every day that contains appointments

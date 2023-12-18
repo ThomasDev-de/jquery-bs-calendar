@@ -176,10 +176,10 @@
             },
             showEventEditButton: false,
             showEventRemoveButton: false,
-            formatPopoverContent(events){
-                return '<div class="list-group list-group-flush">'+events.map(e => {
+            formatPopoverContent(events) {
+                return '<div class="list-group list-group-flush">' + events.map(e => {
                     return `<div class="list-group-itemp p-1">${e.title}</div>`;
-                }).join('')+'</div>'
+                }).join('') + '</div>'
             },
             formatEvent(event) {
                 return drawEvent(event);
@@ -441,9 +441,10 @@
         `;
     }
 
-    function getFormattedDate(date){
+    function getFormattedDate(date) {
         return `${date.getDate()}. ${date.getMonthName()} ${date.getFullYear()}`;
     }
+
     /**
      *
      * @param {object} container
@@ -452,7 +453,7 @@
         let settings = container.data('settings');
 
         let todayHeader = '';
-        if (settings.showTodayHeader){
+        if (settings.showTodayHeader) {
             let today = new Date();
             todayHeader = `
                 <div class="p-3 d-flex flex-column">
@@ -516,8 +517,8 @@
         const iSeeToday = container.find('.js-today').length !== 0;
         const wrap = container.find('.js-weekdays');
         wrap.find('.js-day-name-short').removeClass(highlightClasses);
-        if (iSeeToday){
-            wrap.find('.js-day-name-short:eq('+(container.find('.js-today').index() -1)+')').addClass(highlightClasses);
+        if (iSeeToday) {
+            wrap.find('.js-day-name-short:eq(' + (container.find('.js-today').index() - 1) + ')').addClass(highlightClasses);
         }
 
     }
@@ -613,7 +614,7 @@
          */
         function drawCalendar(selectedDate = null) {
 
-            if (!selectedDate){
+            if (!selectedDate) {
                 selectedDate = new Date();
             }
             let activeDate = container.find('[data-date].active').length ? container.find('[data-date].active').data('date') : null;
@@ -722,13 +723,14 @@
                                 .addClass('bg-danger')
                         }
 
-                        if (column.length && dataEvents.length && settings.showPopover){
+                        if (column.length && dataEvents.length && settings.showPopover) {
                             $(column).popover('dispose');
                             const popoverContent = settings.formatPopoverContent(dataEvents)
-                            const popoverSetup = $.extend(settings.popoverConfig || {}, {
-                                title: '<small>'+getFormattedDate(curDate)+'</small>',
-                                content: popoverContent
-                            });
+                            const popoverSetup = $.extend(settings.popoverConfig || {},
+                                {
+                                    title: '<small>' + getFormattedDate(curDate) + '</small>',
+                                    content: popoverContent
+                                });
                             column.popover(popoverSetup);
                         }
 
@@ -764,7 +766,7 @@
                     e.preventDefault();
                     const dateBefore = container.data('current');
                     const dateAfter = dateBefore.clone().subMonths(1);
-                    container.data('current',dateAfter);
+                    container.data('current', dateAfter);
                     drawCalendar(dateAfter);
                     container.find('.js-collapse:not(.d-none)').addClass('d-none');
                     container.triggerAll('click-prev-month change-month');
@@ -773,7 +775,7 @@
                 .on('click', '.btn-curr-month', function (e) {
                     e.preventDefault();
                     const dateAfter = new Date();
-                    container.data('current',dateAfter);
+                    container.data('current', dateAfter);
                     drawCalendar(dateAfter);
                     container.find('.js-collapse:not(.d-none)').addClass('d-none');
                     container.triggerAll('click-current-month change-month');
@@ -782,14 +784,14 @@
                     e.preventDefault();
                     const dateBefore = container.data('current');
                     const dateAfter = dateBefore.clone().addMonths(1);
-                    container.data('current',dateAfter)
+                    container.data('current', dateAfter)
                     drawCalendar(dateAfter);
                     container.find('.js-collapse:not(.d-none)').addClass('d-none');
                     container.triggerAll('click-next-month change-month');
 
                 })
                 .on('mouseleave', '[data-date]', function (e) {
-                    if (settings.showPopover){
+                    if (settings.showPopover) {
                         $(e.currentTarget).popover('hide');
                     }
                 })
