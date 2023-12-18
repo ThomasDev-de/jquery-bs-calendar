@@ -34,8 +34,7 @@
      */
     Date.getDayNames = function (abbreviation = false) {
         const formatter = new Intl.DateTimeFormat(Date.DEFAULT_LOCALE, {
-            weekday: abbreviation ? 'short' : 'long',
-            timeZone: 'UTC'
+            weekday: abbreviation ? 'short' : 'long', timeZone: 'UTC'
         });
         const days = [2, 3, 4, 5, 6, 7, 8].map(day => {
             const dd = day < 10 ? `0${day}` : day;
@@ -51,8 +50,7 @@
      */
     Date.getMonthNames = function (abbreviation = false) {
         const formatter = new Intl.DateTimeFormat(Date.DEFAULT_LOCALE, {
-            month: abbreviation ? 'short' : 'long',
-            timeZone: 'UTC'
+            month: abbreviation ? 'short' : 'long', timeZone: 'UTC'
         });
         const months = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map(month => {
             const mm = month < 10 ? `0${month}` : month;
@@ -86,8 +84,7 @@
      */
     Date.prototype.getMonthName = function (abbreviation = false) {
         const formatter = new Intl.DateTimeFormat(Date.DEFAULT_LOCALE, {
-            month: abbreviation ? 'short' : 'long',
-            timeZone: 'UTC'
+            month: abbreviation ? 'short' : 'long', timeZone: 'UTC'
         });
         return formatter.format(this);
     };
@@ -116,8 +113,7 @@
      */
     Date.prototype.getDayName = function (abbreviation = false) {
         const formatter = new Intl.DateTimeFormat(Date.DEFAULT_LOCALE, {
-            weekday: abbreviation ? 'short' : 'long',
-            timeZone: 'UTC'
+            weekday: abbreviation ? 'short' : 'long', timeZone: 'UTC'
         });
         return formatter.format(this);
     };
@@ -147,52 +143,31 @@
     $.bsCalendar = {
         setDefaults(o = {}) {
             this.DEFAULTS = $.extend(true, this.DEFAULTS, o || {})
-        },
-        setDefault(prop, value) {
+        }, setDefault(prop, value) {
             this.DEFAULTS[prop] = value;
-        },
-        getDefaults(container) {
+        }, getDefaults(container) {
             this.DEFAULTS.url = container.data('target') || container.data('bsTarget') || this.DEFAULTS.url;
             return this.DEFAULTS;
-        },
-        DEFAULTS: {
-            locale: 'en',
-            url: null,
-            width: '300px',
-            icons: {
+        }, DEFAULTS: {
+            locale: 'en', url: null, width: '300px', icons: {
                 prev: 'bi bi-chevron-left',
                 next: 'bi bi-chevron-right',
                 eventEdit: 'bi bi-pen',
                 eventRemove: 'bi bi-calendar2-x'
-            },
-            showTodayHeader: true,
-            showPopover: true,
-            popoverConfig: {
-                animation: false,
-                html: true,
-                delay: 400,
-                placement: 'top',
-                trigger: 'hover'
-            },
-            showEventEditButton: false,
-            showEventRemoveButton: false,
-            formatPopoverContent(events) {
+            }, showTodayHeader: true, showPopover: true, popoverConfig: {
+                animation: false, html: true, delay: 400, placement: 'top', trigger: 'hover'
+            }, showEventEditButton: false, showEventRemoveButton: false, formatPopoverContent(events) {
                 return '<div class="list-group list-group-flush">' + events.map(e => {
                     return `<div class="list-group-itemp p-1">${e.title}</div>`;
                 }).join('') + '</div>'
-            },
-            formatEvent(event) {
+            }, formatEvent(event) {
                 return drawEvent(event);
-            },
-            formatNoEvent(date) {
+            }, formatNoEvent(date) {
                 return drawNoEvent(date);
-            },
-            queryParams(params) {
+            }, queryParams(params) {
                 return params;
-            },
-            onClickEditEvent(e, event) {
-            },
-            onClickDeleteEvent(e, event) {
+            }, onClickEditEvent(e, event) {
+            }, onClickDeleteEvent(e, event) {
             },
         }
     };
@@ -289,8 +264,7 @@
      */
     Date.prototype.getMonday = function () {
         let d = new Date(this.valueOf());
-        let day = d.getDay(),
-            diff = d.getDate() - day + (day === 0 ? -6 : 1); // adjust when day is sunday
+        let day = d.getDay(), diff = d.getDate() - day + (day === 0 ? -6 : 1); // adjust when day is sunday
         return new Date(d.setDate(diff));
     }
 
@@ -301,8 +275,7 @@
      */
     Date.prototype.getFirstDayOfWeek = function () {
         let d = this.copy();
-        let day = d.getDay(),
-            diff = d.getDate() - day + (day === 0 ? -6 : 1); // adjust when day is sunday
+        let day = d.getDay(), diff = d.getDate() - day + (day === 0 ? -6 : 1); // adjust when day is sunday
         return new Date(d.setDate(diff));
     }
 
@@ -344,15 +317,11 @@
      * @returns {(number|string)[]|string}
      */
     Date.prototype.formatDate = function (asArray) {
-        let d = new Date(this.valueOf()),
-            month = '' + (d.getMonth() + 1),
-            day = '' + d.getDate(),
+        let d = new Date(this.valueOf()), month = '' + (d.getMonth() + 1), day = '' + d.getDate(),
             year = d.getFullYear();
 
-        if (month.length < 2)
-            month = '0' + month;
-        if (day.length < 2)
-            day = '0' + day;
+        if (month.length < 2) month = '0' + month;
+        if (day.length < 2) day = '0' + day;
 
         return asArray ? [year, month, day] : [year, month, day].join('-');
     }
@@ -471,7 +440,7 @@
                 <a href="#" class="btn btn-link text-decoration-none  mx-1 flex-fill btn-curr-month month-name"></a>
                 <a href="#" class="btn btn-link text-decoration-none  btn-next-month"><i class="${settings.icons.next}"></i></a>
             </div>
-            <div class="d-flex flex-nowrap align-items-center js-weekdays">
+            <div class="d-flex flex-nowrap align-items-center js-weekdays bootstrap-calendar-weekday-row">
                 <div class="text-center"></div>
             </div>
              <div class="js-weeks"></div>
@@ -505,9 +474,7 @@
         Date.getDayNames(true).forEach(wd => {
             const addClass = wd === currentDayName ? 'text-warning' : '';
             $('<div>', {
-                html: wd,
-                class: 'js-day-name-short text-center ' + addClass,
-                css: cellCss,
+                html: wd, class: 'js-day-name-short text-center bootstrap-calendar-weekday' + addClass, css: cellCss,
             }).appendTo(container.find('.js-weekdays'));
         });
     }
@@ -541,6 +508,7 @@
          *
          * @type {jQuery|HTMLElement|*}
          */
+        const CONTAINER_WRAPPER_CLASS = '.bootstrap-calendar-container';
         const container = $(this);
         let xhr = null;
 
@@ -568,10 +536,7 @@
          * @return {boolean} Returns true if the current theme is dark mode, and false otherwise.
          */
         function isDarkMode() {
-            return container.data('bsTheme') === 'dark'
-                || (container.closest('[data-bs-theme]').length
-                    && container.closest('[data-bs-theme]').data('bsTheme') === 'dark'
-                );
+            return container.data('bsTheme') === 'dark' || (container.closest('[data-bs-theme]').length && container.closest('[data-bs-theme]').data('bsTheme') === 'dark');
         }
 
         /**
@@ -597,6 +562,7 @@
                 };
                 // noinspection JSUnusedGlobalSymbols
                 xhr = $.ajax({
+                    async: true,
                     url: settings.url,
                     dataType: 'json',
                     data: settings.queryParams(data),
@@ -610,22 +576,23 @@
 
         /**
          * Draw a calendar based on a selected date
+         * @param {jQuery|$} containerElement - The wrapper
          * @param {Date|null|undefined} selectedDate - The selected date to display the calendar for
          */
-        function drawCalendar(selectedDate = null) {
+        function drawCalendar(containerElement, selectedDate = null) {
 
             if (!selectedDate) {
                 selectedDate = new Date();
             }
-            let activeDate = container.find('[data-date].active').length ? container.find('[data-date].active').data('date') : null;
+            let activeDate = $(containerElement).find('[data-date].active').length ? $(containerElement).find('[data-date].active').data('date') : null;
 
-            let wrap = container.find('.js-weeks').empty();
+            let wrap = $(containerElement).find('.js-weeks').empty();
             const startDay = selectedDate.clone().getFirstDayOfMonth().getMonday();
             const endDay = selectedDate.clone().getLastDayOfMonth().getSunday();
 
             let date = startDay.clone().subDays(1);
 
-            container.find('.month-name').html(selectedDate.getMonthName() + ' ' + selectedDate.getFullYear());
+            $(containerElement).find('.month-name').html(selectedDate.getMonthName() + ' ' + selectedDate.getFullYear());
 
             calendar = [];
             while (date < endDay) {
@@ -639,7 +606,7 @@
             const today = new Date();
             const currentWeek = today.getWeek();
             const currentYear = today.getFullYear();
-
+            let foundToday = false;
             calendar.forEach(week => {
                 let w = week.days[0].getWeek();
                 let highlight_week = currentYear === week.days[0].getFullYear() && currentWeek === w;
@@ -651,41 +618,26 @@
 
                 // calendar week
                 $('<div>', {
-                    class: 'd-flex justify-content-center align-items-center js-cal-row',
-                    css: {
-                        fontSize: fontSize + 'px',
-                        color: '#adadad',
-                        width: cellWidthHeight,
-                        height: cellWidthHeight
-                    },
-                    html: [
-                        '<small class="text-center mb-0 ' + highlightClass + '">' + w + '</small>'
-                    ].join('')
+                    class: 'd-flex justify-content-center align-items-center js-cal-row bootstrap-calendar-week', css: {
+                        fontSize: fontSize + 'px', color: '#adadad', width: cellWidthHeight, height: cellWidthHeight
+                    }, html: ['<small class="text-center mb-0 ' + highlightClass + '">' + w + '</small>'].join('')
                 }).appendTo(weekContainer);
 
 
                 week.days.forEach(day => {
-                    let isToday = today.formatDate(false) === day.formatDate(false);
-                    let isInMonth = selectedDate.formatDate(true)[1] === day.formatDate(true)[1];
-                    let cellBackground = isToday ? ' text-bg-primary rounded-circle ' : (isInMonth ? ' fw-bold ' : ' fw-small');
-                    let cellTextColor = isInMonth ? '' : 'gray';
-                    let highlight = !isToday ? '' : ' js-today ';
+                    const isToday = today.formatDate(false) === day.formatDate(false);
+                    if (isToday) foundToday = true;
+                    const isInMonth = selectedDate.formatDate(true)[1] === day.formatDate(true)[1];
+                    const cellBackground = isToday ? ' text-bg-primary rounded-circle ' : (isInMonth ? ' fw-bold ' : ' fw-small ');
+                    const cellTextColor = isInMonth ? '' : 'gray';
+                    const highlight = !isToday ? '' : ' js-today ';
                     let col = $('<div>', {
                         'data-date': day.formatDate(false),
-                        class: 'position-relative d-flex justify-content-center align-items-center ' + highlight + cellBackground,
+                        class: 'position-relative d-flex justify-content-center align-items-center bootstrap-calendar-day ' + highlight + cellBackground,
                         css: {
-                            color: cellTextColor,
-                            cursor: 'pointer',
-                            width: cellWidthHeight,
-                            height: cellWidthHeight
+                            color: cellTextColor, cursor: 'pointer', width: cellWidthHeight, height: cellWidthHeight
                         },
-                        html: [
-                            '<div style="font-size:' + fontSize + 'px">' + day.formatDate(true)[2] + '</div>',
-                            [
-                                '<small class="js-count-events position-absolute text-center rounded-circle" style="width:4px; height:4px; bottom:4px; left: 50%; margin-left:-2px">',
-                                '</small>'
-                            ].join('')
-                        ].join('')
+                        html: ['<div style="font-size:' + fontSize + 'px">' + day.formatDate(true)[2] + '</div>', ['<small class="js-count-events position-absolute text-center rounded-circle" style="width:4px; height:4px; bottom:4px; left: 50%; margin-left:-2px">', '</small>'].join('')].join('')
                     }).appendTo(weekContainer);
                     col.data('events', []);
                 });
@@ -693,26 +645,27 @@
 
             });
 
-            highlightDayName(container);
+            highlightDayName(containerElement);
 
-            getEvents(container, selectedDate, function (events) {
-                let haveEventsToday = false;
+            getEvents(containerElement, selectedDate, function (events) {
+
+                // empty the event list before
+                $(containerElement).find('[data-date]').each(function (i, e) {
+                    $(e).data('events', [])
+                });
+
                 events.forEach(event => {
-                    let start = new Date(event.start);
-                    let end = new Date(event.end);
+                    const start = new Date(event.start);
+                    const end = new Date(event.end);
 
                     let curDate = start.clone();
                     let currDaysFormatted;
-                    let now = new Date();
+
                     do {
 
                         currDaysFormatted = curDate.formatDate(false);
 
-                        if (false === haveEventsToday && (currDaysFormatted === now.formatDate(false))) {
-                            haveEventsToday = true;
-                        }
-
-                        let column = container.find('[data-date="' + curDate.formatDate(false) + '"]');
+                        let column = $(containerElement).find('[data-date="' + curDate.formatDate(false) + '"]');
                         let dataEvents = [];
                         if (column.length) {
                             dataEvents = column.data('events');
@@ -726,11 +679,9 @@
                         if (column.length && dataEvents.length && settings.showPopover) {
                             $(column).popover('dispose');
                             const popoverContent = settings.formatPopoverContent(dataEvents)
-                            const popoverSetup = $.extend(settings.popoverConfig || {},
-                                {
-                                    title: '<small>' + getFormattedDate(curDate) + '</small>',
-                                    content: popoverContent
-                                });
+                            const popoverSetup = $.extend(settings.popoverConfig || {}, {
+                                title: '<small>' + getFormattedDate(curDate) + '</small>', content: popoverContent
+                            });
                             column.popover(popoverSetup);
                         }
 
@@ -739,13 +690,8 @@
                     } while (currDaysFormatted < end.formatDate(false));
                 });
 
-                if (activeDate !== null && container.find('[data-date="' + activeDate + '"]').length) {
-                    container.find('[data-date="' + activeDate + '"]').trigger('click');
-                } else {
-                    // Today is in the current month?
-                    if (container.find('.js-today').length) {
-                        container.find('.js-today').trigger('click');
-                    }
+                if (foundToday) {
+                    $(containerElement).find('.js-today').trigger('click');
                 }
             });
         }
@@ -756,39 +702,47 @@
          *
          * @return {void}
          */
-        function events() {
-            container
+        function events(containerElement) {
+            const settings = $(containerElement).data('settings');
+            containerElement
                 .on('click', '.js-event', function (e) {
-                    let event = $(e.currentTarget).data('event');
-                    container.trigger('click-event', [event]);
+                    let $column = $(e.currentTarget);
+                    let event = $column.data('event');
+                    let container2 = $column.closest(CONTAINER_WRAPPER_CLASS);
+                    container2.trigger('click-event', [event]);
                 })
                 .on('click', '.btn-prev-month', function (e) {
                     e.preventDefault();
-                    const dateBefore = container.data('current');
+                    const btn = $(e.currentTarget);
+                    let container2 = btn.closest(CONTAINER_WRAPPER_CLASS);
+                    const dateBefore = container2.data('current');
                     const dateAfter = dateBefore.clone().subMonths(1);
-                    container.data('current', dateAfter);
-                    drawCalendar(dateAfter);
-                    container.find('.js-collapse:not(.d-none)').addClass('d-none');
-                    container.triggerAll('click-prev-month change-month');
+                    container2.data('current', dateAfter);
+                    drawCalendar(container2, dateAfter);
+                    container2.find('.js-collapse:not(.d-none)').addClass('d-none');
+                    container2.triggerAll('click-prev-month change-month');
 
                 })
                 .on('click', '.btn-curr-month', function (e) {
                     e.preventDefault();
+                    const btn = $(e.currentTarget);
+                    let container2 = btn.closest(CONTAINER_WRAPPER_CLASS);
                     const dateAfter = new Date();
-                    container.data('current', dateAfter);
-                    drawCalendar(dateAfter);
-                    container.find('.js-collapse:not(.d-none)').addClass('d-none');
-                    container.triggerAll('click-current-month change-month');
+                    container2.data('current', dateAfter);
+                    drawCalendar(container2, dateAfter);
+                    container2.find('.js-collapse:not(.d-none)').addClass('d-none');
+                    container2.triggerAll('click-current-month change-month');
                 })
                 .on('click', '.btn-next-month', function (e) {
                     e.preventDefault();
-                    const dateBefore = container.data('current');
+                    const btn = $(e.currentTarget);
+                    let container2 = btn.closest(CONTAINER_WRAPPER_CLASS);
+                    const dateBefore = container2.data('current');
                     const dateAfter = dateBefore.clone().addMonths(1);
-                    container.data('current', dateAfter)
-                    drawCalendar(dateAfter);
-                    container.find('.js-collapse:not(.d-none)').addClass('d-none');
-                    container.triggerAll('click-next-month change-month');
-
+                    container2.data('current', dateAfter)
+                    drawCalendar(container2, dateAfter);
+                    container2.find('.js-collapse:not(.d-none)').addClass('d-none');
+                    container2.triggerAll('click-next-month change-month');
                 })
                 .on('mouseleave', '[data-date]', function (e) {
                     if (settings.showPopover) {
@@ -797,30 +751,32 @@
                 })
                 .on('click', '[data-date]', function (e) {
                     let $column = $(e.currentTarget);
+                    let container2 = $column.closest(CONTAINER_WRAPPER_CLASS);
+                    container2.find('[data-date].active').removeClass('active');
+                    $column.addClass('active');
                     let date = new Date($column.data('date'));
                     let events = $column.data('events');
-                    container.find('.js-day-name').html(date.showDateFormatted());
-                    drawEventList(container, events, date);
-                    container.find('.js-collapse.d-none').removeClass('d-none');
-                    container.trigger('change-day', [date, events]);
+                    container2.find('.js-day-name').html(date.showDateFormatted());
+                    drawEventList(container2, events, date);
+                    container2.find('.js-collapse.d-none').removeClass('d-none');
+                    container2.trigger('change-day', [date, events]);
                 });
         }
 
         /**
          * Draws the event list in the specified container with the given events and date.
          *
-         * @param {jQuery} container - The DOM element (jQuery object) where the event list will be displayed.
+         * @param {jQuery} containerElement - The DOM element (jQuery object) where the event list will be displayed.
          * @param {array} events - An array of events to be displayed in the event list.
          * @param {Date} date - The date used for formatting purposes.
          */
-        function drawEventList(container, events, date) {
-            $(container).trigger('show-event-list', [events]);
-            let eventList = $(container).find('.js-events');
+        function drawEventList(containerElement, events, date) {
+            $(containerElement).trigger('show-event-list', [events]);
+            let eventList = $(containerElement).find('.js-events');
             eventList.empty();
             if (!events.length) {
                 $('<div>', {
-                    class: 'list-group-item',
-                    html: settings.formatNoEvent(date)
+                    class: 'list-group-item', html: settings.formatNoEvent(date)
                 }).appendTo(eventList);
             } else {
 
@@ -831,33 +787,30 @@
                         class: 'js-event d-flex justify-content-between align-items-center list-group-item p-0',
                         html: `<div class="flex-fill">${eventHtml}</div><div><div class="btn-group-vertical btn-group-sm" role="group"></div></div>`
                     }).appendTo(eventList);
-                    getEventButtons(container, event, eventWrapper.find('.btn-group-vertical'));
+                    getEventButtons(containerElement, event, eventWrapper.find('.btn-group-vertical'));
                     eventWrapper.data('event', event);
                 });
             }
 
-            setTimeout(function () {
-                $(container).trigger('shown-event-list', [events]);
-            }, 0);
+            $(containerElement).trigger('shown-event-list', [events]);
+
 
         }
 
         /**
          * Retrieves the event buttons for a given container, event, and wrap.
          *
-         * @param {jQuery} container - The jQuery object representing the container element.
+         * @param {jQuery} containerElement - The jQuery object representing the container element.
          * @param {Object} event - The event object.
          * @param {jQuery} wrap - The jQuery object representing the wrap element.
          */
-        function getEventButtons(container, event, wrap) {
-            let settings = $(container).data('settings');
+        function getEventButtons(containerElement, event, wrap) {
+            let settings = $(containerElement).data('settings');
             let editable = !event.hasOwnProperty('editable') || event.editable;
             let deletable = !event.hasOwnProperty('deletable') || event.deletable;
             if (settings.showEventEditButton && editable) {
                 let editButton = $('<a>', {
-                    href: '#',
-                    class: eventEditButton.class,
-                    html: `<i class="${settings.icons.eventEdit}"></i>`
+                    href: '#', class: eventEditButton.class, html: `<i class="${settings.icons.eventEdit}"></i>`
                 }).appendTo(wrap);
 
                 editButton.on('click', function (e) {
@@ -867,9 +820,7 @@
             }
             if (settings.showEventRemoveButton && deletable) {
                 let removeButton = $('<a>', {
-                    href: '#',
-                    class: eventRemoveButton.class,
-                    html: `<i class="${settings.icons.eventRemove}"></i>`
+                    href: '#', class: eventRemoveButton.class, html: `<i class="${settings.icons.eventRemove}"></i>`
                 }).appendTo(wrap);
 
                 removeButton.on('click', function (e) {
@@ -886,9 +837,10 @@
          */
         function init() {
             if (!container.data('init')) {
+                container.addClass(CONTAINER_WRAPPER_CLASS.substring(1));
                 container.data('current', new Date());
-                drawCalendar();
-                events();
+                drawCalendar(container);
+                events(container);
 
                 container.data('init', true);
                 container.trigger('init');
@@ -906,20 +858,20 @@
                     container.data('settings', newOptions);
                     container.empty();
                     drawTemplate(container);
-                    drawCalendar(dateAfter);
+                    drawCalendar(container, dateAfter);
                     break;
                 }
                 case 'refresh': {
                     container.empty();
                     const dateAfter = container.data('current');
                     drawTemplate(container);
-                    drawCalendar(dateAfter);
+                    drawCalendar(container, dateAfter);
                     break;
                 }
                 case 'setDate': {
                     const dateAfter = new Date(params);
                     container.data('current', dateAfter);
-                    drawCalendar(dateAfter);
+                    drawCalendar(container, dateAfter);
                     break;
                 }
             }

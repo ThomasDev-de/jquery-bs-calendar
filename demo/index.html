@@ -6,6 +6,16 @@
     <title>jquery-bs-calendar demo</title>
     <link href="../vendor/twbs/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="../vendor/twbs/bootstrap-icons/font/bootstrap-icons.min.css" rel="stylesheet">
+    <style>
+        #calendar_inline .bootstrap-calendar-day.active{
+            background-color: pink;
+        }
+        #calendar_inline .bootstrap-calendar-week,
+        #calendar_inline .bootstrap-calendar-weekday-row
+        {
+            background-color: green;
+        }
+    </style>
 </head>
 <body class="h-100 d-flex align-items-stretch">
 <div class="container flex-fill py-5 d-flex flex-column  align-items-center">
@@ -92,7 +102,7 @@
 <script src="../vendor/webcito/js-date-extensions/dist/js-date-extensions.js"></script>
 <script src="../dist/jquery.bs.calendar.min.js"></script>
 <script>
-    (function ($) {
+    $(document).ready(function() {
         $.bsCalendar.setDefaults({
             locale: 'en',
             url: 'events.json',
@@ -118,10 +128,13 @@
             $('#calendar_inline').bsCalendar('refresh');
         });
 
-        $('#calendar_inline').bsCalendar('setDate', '2025-12-24');
+        // setTimeout(function(){
+            $('#calendar_inline').bsCalendar('setDate', '2025-12-24');
+        // },1000)
 
 
-    }(jQuery));
+
+    });
 </script>
 </body>
 </html>

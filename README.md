@@ -118,3 +118,25 @@ $('#calendar')
     .on('click-next-month', function (e) {})
     .on('change-month', function (e) {})
 ```
+
+### Styling
+
+The plugin offers the following classes to adjust the color of your calendar.
+
+```css
+.bootstrap-calendar-container {
+    /* the wrapper element */
+}
+.bootstrap-calendar-day {
+    /* simple day */
+}
+.bootstrap-calendar-day.active {
+    /* clicked day */
+}
+.bootstrap-calendar-week {
+    /* the first col with the numbers of week */     
+}
+.bootstrap-calendar-weekday-row {
+    /* the first row with the names of weekdays */
+}
+```
