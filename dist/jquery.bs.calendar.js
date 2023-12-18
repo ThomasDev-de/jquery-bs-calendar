@@ -166,8 +166,21 @@
                 eventRemove: 'bi bi-calendar2-x'
             },
             showTodayHeader: true,
+            showPopover: true,
+            popoverConfig: {
+                animation: false,
+                html: true,
+                delay: 400,
+                placement: 'top',
+                trigger: 'hover'
+            },
             showEventEditButton: false,
             showEventRemoveButton: false,
+            formatPopoverContent(events){
+                return '<div class="list-group list-group-flush">'+events.map(e => {
+                    return `<div class="list-group-itemp p-1">${e.title}</div>`;
+                }).join('')+'</div>'
+            },
             formatEvent(event) {
                 return drawEvent(event);
             },
@@ -428,6 +441,9 @@
         `;
     }
 
+    function getFormattedDate(date){
+        return `${date.getDate()}. ${date.getMonthName()} ${date.getFullYear()}`;
+    }
     /**
      *
      * @param {object} container
@@ -441,7 +457,7 @@
             todayHeader = `
                 <div class="p-3 d-flex flex-column">
 				    <small>${today.getDayName()}</small>
-				    <h4 class="mb-0">${today.getDate()}. ${today.getMonthName()} ${today.getFullYear()}</h4>
+				    <h4 class="mb-0">${getFormattedDate(today)}</h4>
 			    </div>
             `;
         }
@@ -624,7 +640,6 @@
             const currentYear = today.getFullYear();
 
             calendar.forEach(week => {
-
                 let w = week.days[0].getWeek();
                 let highlight_week = currentYear === week.days[0].getFullYear() && currentWeek === w;
                 let highlightClass = highlight_week ? 'fw-bold text-warning' : 'fw-small';
@@ -672,7 +687,6 @@
                         ].join('')
                     }).appendTo(weekContainer);
                     col.data('events', []);
-
                 });
 
 
@@ -698,15 +712,28 @@
                         }
 
                         let column = container.find('[data-date="' + curDate.formatDate(false) + '"]');
+                        let dataEvents = [];
                         if (column.length) {
-                            let dataEvents = column.data('events');
+                            dataEvents = column.data('events');
                             dataEvents.push(event);
                             column
                                 .data('events', dataEvents)
                                 .find(`.js-count-events`)
                                 .addClass('bg-danger')
                         }
+
+                        if (column.length && dataEvents.length && settings.showPopover){
+                            $(column).popover('dispose');
+                            const popoverContent = settings.formatPopoverContent(dataEvents)
+                            const popoverSetup = $.extend(settings.popoverConfig || {}, {
+                                title: '<small>'+getFormattedDate(curDate)+'</small>',
+                                content: popoverContent
+                            });
+                            column.popover(popoverSetup);
+                        }
+
                         curDate = curDate.clone().addDays(1);
+
                     } while (currDaysFormatted < end.formatDate(false));
                 });
 
@@ -761,14 +788,13 @@
                     container.triggerAll('click-next-month change-month');
 
                 })
+                .on('mouseleave', '[data-date]', function (e) {
+                    if (settings.showPopover){
+                        $(e.currentTarget).popover('hide');
+                    }
+                })
                 .on('click', '[data-date]', function (e) {
                     let $column = $(e.currentTarget);
-                    // container
-                    //     .find('.js-weeks')
-                    //     .find('[data-date].border-secondary')
-                    //     .removeClass('border-secondary active')
-                    //     .addClass('border-white')
-                    // $column.removeClass('border-white').addClass('border-secondary active')
                     let date = new Date($column.data('date'));
                     let events = $column.data('events');
                     container.find('.js-day-name').html(date.showDateFormatted());

@@ -19,6 +19,17 @@ const options = {
     "showTodayHeader": true, // Show or hide the header of the calendar, which contains information about today
     "showEventEditButton": false, // Should an edit button appear on all appointments?
     "showEventRemoveButton": false, // Should a delete button appear for all appointments?
+    "showPopover": true, // If the value is true, a popover will pop up on every day that contains appointments
+    "popoverConfig": { //The popover configuration can be set here, more at https://getbootstrap.com/docs/5.3/components/popovers/#options
+        animation: false,
+        html: true,
+        delay: 400,
+        placement: 'top',
+        trigger: 'hover'
+    },
+    "formatPopoverContent": function (events) {
+        return '';
+    }, // The content of the popover can be formatted here. The condition for this is that the showPopover attribute is set to true.
     "formatEvent": function (event) {
     }, // Here you can change the display of the dates.
     "formatNoEvent": function (date) {
