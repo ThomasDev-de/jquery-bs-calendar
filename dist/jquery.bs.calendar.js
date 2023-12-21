@@ -848,6 +848,8 @@
             return container;
         }
 
+        init();
+
         if (isMethodSet) {
             switch (options) {
                 case 'updateOptions': {
@@ -877,6 +879,6 @@
             }
         }
 
-        return init();
+        return container;
     };
 }(jQuery));
