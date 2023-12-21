@@ -145,18 +145,24 @@
             this.DEFAULTS = $.extend(true, this.DEFAULTS, o || {})
         }, setDefault(prop, value) {
             this.DEFAULTS[prop] = value;
-        }, getDefaults(container) {
-            this.DEFAULTS.url = container.data('target') || container.data('bsTarget') || this.DEFAULTS.url;
+        }, getDefaults() {
             return this.DEFAULTS;
         }, DEFAULTS: {
-            locale: 'en', url: null, width: '300px', icons: {
+            locale: 'en',
+            url: null,
+            width: '300px',
+            icons: {
                 prev: 'bi bi-chevron-left',
                 next: 'bi bi-chevron-right',
                 eventEdit: 'bi bi-pen',
                 eventRemove: 'bi bi-calendar2-x'
-            }, showTodayHeader: true, showPopover: true, popoverConfig: {
+            },
+            showTodayHeader: true, showPopover: true, popoverConfig: {
                 animation: false, html: true, delay: 400, placement: 'top', trigger: 'hover'
-            }, showEventEditButton: false, showEventRemoveButton: false, formatPopoverContent(events) {
+            },
+            showEventEditButton: false,
+            showEventRemoveButton: false,
+            formatPopoverContent(events) {
                 return '<div class="list-group list-group-flush">' + events.map(e => {
                     return `<div class="list-group-itemp p-1">${e.title}</div>`;
                 }).join('') + '</div>'
@@ -414,11 +420,22 @@
         return `${date.getDate()}. ${date.getMonthName()} ${date.getFullYear()}`;
     }
 
+    function getFontSize(containerElement) {
+        const widthHeight = getCellWidthHeight(containerElement);
+        return widthHeight / 3;
+    }
+
+    function getCellWidthHeight(containerElement) {
+        return containerElement.width() / 8; // 7 days + calendar week
+
+    }
+
     /**
      *
      * @param {object} container
      */
     function drawTemplate(container) {
+
         let settings = container.data('settings');
 
         let todayHeader = '';
@@ -431,8 +448,10 @@
 			    </div>
             `;
         }
+        console.log('######### SETTINGS ON DRAW TEMPLATE', settings.width);
         container
-            .css({'width': settings.width})
+            // .width(settings.width)
+            // .css({width: settings.width})
             .html(`
 			${todayHeader}
             <div class="d-flex flex-nowrap justify-content-between align-items-center p-2">
@@ -453,8 +472,9 @@
             </div>
         `);
 
-        let cellWidthHeight = container.width() / 8; // 7 days + calendar week
-        let fontSize = cellWidthHeight / 3;
+        let cellWidthHeight = getCellWidthHeight(container); // 7 days + calendar week
+        let fontSize = getFontSize(container);
+        // alert(fontSize);
         let cellCss = {
             color: '#adadad',
             lineHeight: cellWidthHeight + 'px',
@@ -462,6 +482,7 @@
             height: cellWidthHeight,
             width: cellWidthHeight,
         };
+        // console.log(getCellWidthHeight(container));
         container.find('.js-weekdays div:first').css(cellCss);
 
 
@@ -514,20 +535,8 @@
 
         let isMethodSet = typeof options === 'string';
 
-        let settings;
-
-        if (container.data('init') !== true) {
-            settings = $.extend(true, $.bsCalendar.getDefaults(container), options || {});
-            Date.setLocale(settings.locale);
-            container.data('settings', $.extend(true, $.bsCalendar.getDefaults(container), options || {}));
-            drawTemplate(container);
-        } else {
-            settings = container.data('settings');
-        }
-
-        let cellWidthHeight = container.width() / 8; // 7 days + calendar week
-        let fontSize = cellWidthHeight / 3; // 7 days + calendar week
         let calendar = [];
+
 
         // noinspection JSUnusedLocalSymbols
         /**
@@ -548,12 +557,13 @@
          * @return {void}
          */
         function getEvents(container, selected, callback) {
+            const setup = container.data('settings')
             if (xhr) {
                 xhr.abort();
                 xhr = null;
             }
 
-            if (!settings.url) {
+            if (!setup.url) {
                 callback([]);
             } else {
                 let data = {
@@ -563,9 +573,9 @@
                 // noinspection JSUnusedGlobalSymbols
                 xhr = $.ajax({
                     async: true,
-                    url: settings.url,
+                    url: setup.url,
                     dataType: 'json',
-                    data: settings.queryParams(data),
+                    data: setup.queryParams(data),
                     success: function (events) {
                         container.trigger('events-loaded', [events]);
                         callback(events || []);
@@ -607,6 +617,8 @@
             const currentWeek = today.getWeek();
             const currentYear = today.getFullYear();
             let foundToday = false;
+            const widthHeight = getCellWidthHeight(containerElement);
+            const fontSize = getFontSize(containerElement);
             calendar.forEach(week => {
                 let w = week.days[0].getWeek();
                 let highlight_week = currentYear === week.days[0].getFullYear() && currentWeek === w;
@@ -619,10 +631,12 @@
                 // calendar week
                 $('<div>', {
                     class: 'd-flex justify-content-center align-items-center js-cal-row bootstrap-calendar-week', css: {
-                        fontSize: fontSize + 'px', color: '#adadad', width: cellWidthHeight, height: cellWidthHeight
+                        fontSize: getFontSize(containerElement) + 'px',
+                        color: '#adadad',
+                        width: widthHeight,
+                        height: widthHeight
                     }, html: ['<small class="text-center mb-0 ' + highlightClass + '">' + w + '</small>'].join('')
                 }).appendTo(weekContainer);
-
 
                 week.days.forEach(day => {
                     const isToday = today.formatDate(false) === day.formatDate(false);
@@ -635,7 +649,7 @@
                         'data-date': day.formatDate(false),
                         class: 'position-relative d-flex justify-content-center align-items-center bootstrap-calendar-day ' + highlight + cellBackground,
                         css: {
-                            color: cellTextColor, cursor: 'pointer', width: cellWidthHeight, height: cellWidthHeight
+                            color: cellTextColor, cursor: 'pointer', width: widthHeight, height: widthHeight
                         },
                         html: ['<div style="font-size:' + fontSize + 'px">' + day.formatDate(true)[2] + '</div>', ['<small class="js-count-events position-absolute text-center rounded-circle" style="width:4px; height:4px; bottom:4px; left: 50%; margin-left:-2px">', '</small>'].join('')].join('')
                     }).appendTo(weekContainer);
@@ -648,6 +662,8 @@
             highlightDayName(containerElement);
 
             getEvents(containerElement, selectedDate, function (events) {
+
+                const setup = container.data('settings');
 
                 // empty the event list before
                 $(containerElement).find('[data-date]').each(function (i, e) {
@@ -676,10 +692,10 @@
                                 .addClass('bg-danger')
                         }
 
-                        if (column.length && dataEvents.length && settings.showPopover) {
+                        if (column.length && dataEvents.length && setup.showPopover) {
                             $(column).popover('dispose');
-                            const popoverContent = settings.formatPopoverContent(dataEvents)
-                            const popoverSetup = $.extend(settings.popoverConfig || {}, {
+                            const popoverContent = setup.formatPopoverContent(dataEvents)
+                            const popoverSetup = $.extend(setup.popoverConfig || {}, {
                                 title: '<small>' + getFormattedDate(curDate) + '</small>', content: popoverContent
                             });
                             column.popover(popoverSetup);
@@ -689,6 +705,26 @@
 
                     } while (currDaysFormatted < end.formatDate(false));
                 });
+
+                if (widthHeight >= 55) {
+                    $(containerElement).find('[data-date]').each(function (i, e) {
+                        const count = $(e).data('events').length;
+                        if (count) {
+                            $(e).find('.js-count-events').css({
+                                fontSize : '9px',
+                                height:'16px',
+                                width:'16px',
+                                lineHeight: '16px',
+                                color: 'white',
+                                left: 'calc(50% - 8px)',
+                                bottom:'1px',
+                                margin:0
+                            }).text(count);
+                            console.log(count);
+                        }
+
+                    });
+                }
 
                 if (foundToday) {
                     $(containerElement).find('.js-today').trigger('click');
@@ -772,16 +808,17 @@
          */
         function drawEventList(containerElement, events, date) {
             $(containerElement).trigger('show-event-list', [events]);
+            const setup = containerElement.data('settings');
             let eventList = $(containerElement).find('.js-events');
             eventList.empty();
             if (!events.length) {
                 $('<div>', {
-                    class: 'list-group-item', html: settings.formatNoEvent(date)
+                    class: 'list-group-item', html: setup.formatNoEvent(date)
                 }).appendTo(eventList);
             } else {
 
                 events.forEach(event => {
-                    let eventHtml = settings.formatEvent(event);
+                    let eventHtml = setup.formatEvent(event);
 
                     let eventWrapper = $('<div>', {
                         class: 'js-event d-flex justify-content-between align-items-center list-group-item p-0',
@@ -838,7 +875,15 @@
         function init() {
             if (!container.data('init')) {
                 container.addClass(CONTAINER_WRAPPER_CLASS.substring(1));
+
                 container.data('current', new Date());
+                const settings = $.extend(true, $.bsCalendar.DEFAULTS, options || {});
+                console.log('######### SETTINGS ON INIT', settings.width);
+                settings.url = container.data('target') || container.data('bsTarget') || $.bsCalendar.DEFAULTS.url;
+                Date.setLocale(settings.locale);
+                container.data('settings', settings);
+                container.css('width', settings.width);
+                drawTemplate(container);
                 drawCalendar(container);
                 events(container);
 
