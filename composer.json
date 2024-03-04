@@ -13,8 +13,8 @@
   "require": {
     "components/jquery": "3.6.0",
     "webcito/js-date-extensions": "dev-main",
-    "twbs/bootstrap": ">=v5.3.2",
-    "twbs/bootstrap-icons": "~>=1.11.2"
+    "twbs/bootstrap": "~v5.3.2",
+    "twbs/bootstrap-icons": "~v1.11.2"
   },
   "require-dev": {
     "roave/security-advisories": "dev-latest"
