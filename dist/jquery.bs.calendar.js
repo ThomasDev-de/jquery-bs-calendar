@@ -465,7 +465,7 @@
              <div class="js-weeks"></div>
             <div class="dates"></div>
             <div class="p-2 js-collapse d-none">
-                <div class="card mb-0 rounded-0 border-0">
+                <div class="card mb-0 rounded-0 border-0" style="width: 100%">
                     <div class="text-center fw-bold py-2 js-day-name card-header bg-transparent"></div>
                     <div class="js-events list-group list-group-flush"></div>
                 </div>
