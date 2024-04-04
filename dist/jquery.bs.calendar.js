@@ -1,4 +1,4 @@
-// noinspection DuplicatedCode
+// noinspection DuplicatedCode,JSUnresolvedReference
 
 (function ($) {
 
@@ -135,6 +135,7 @@
         }
     });
 
+    // noinspection JSUnusedGlobalSymbols
     /**
      * Represents the jQuery plugin bsCalendar.
      *
@@ -465,8 +466,8 @@
              <div class="js-weeks"></div>
             <div class="dates"></div>
             <div class="p-2 js-collapse d-none">
-                <div class="card mb-0 rounded-0 border-0" style="width: 100%">
-                    <div class="text-center fw-bold py-2 js-day-name card-header bg-transparent"></div>
+                <div class="mb-0 rounded-0 border-top" style="width: 100%">
+                    <div class="text-center fw-bold py-2 js-day-name bg-transparent"></div>
                     <div class="js-events list-group list-group-flush"></div>
                 </div>
             </div>
@@ -594,7 +595,7 @@
             if (!selectedDate) {
                 selectedDate = new Date();
             }
-            let activeDate = $(containerElement).find('[data-date].active').length ? $(containerElement).find('[data-date].active').data('date') : null;
+            // let activeDate = $(containerElement).find('[data-date].active').length ? $(containerElement).find('[data-date].active').data('date') : null;
 
             let wrap = $(containerElement).find('.js-weeks').empty();
             const startDay = selectedDate.clone().getFirstDayOfMonth().getMonday();
