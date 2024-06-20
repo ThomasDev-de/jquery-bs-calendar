@@ -775,7 +775,8 @@
                     const dateAfter = dateBefore.clone().subMonths(1);
                     container2.data('current', dateAfter);
                     drawCalendar(container2, dateAfter);
-                    container2.find('.js-collapse:not(.d-none)').addClass('d-none');
+                    const c = settings.eventListContainer !== null ? $(settings.eventListContainer) : container2;
+                    c.find('.js-collapse:not(.d-none)').addClass('d-none');
                     container2.triggerAll('click-prev-month change-month');
 
                 })
@@ -786,7 +787,8 @@
                     const dateAfter = new Date();
                     container2.data('current', dateAfter);
                     drawCalendar(container2, dateAfter);
-                    container2.find('.js-collapse:not(.d-none)').addClass('d-none');
+                    const c = settings.eventListContainer !== null ? $(settings.eventListContainer) : container2;
+                    c.find('.js-collapse:not(.d-none)').addClass('d-none');
                     container2.triggerAll('click-current-month change-month');
                 })
                 .on('click', '.btn-next-month', function (e) {
@@ -797,7 +799,8 @@
                     const dateAfter = dateBefore.clone().addMonths(1);
                     container2.data('current', dateAfter)
                     drawCalendar(container2, dateAfter);
-                    container2.find('.js-collapse:not(.d-none)').addClass('d-none');
+                    const c = settings.eventListContainer !== null ? $(settings.eventListContainer) : container2;
+                    c.find('.js-collapse:not(.d-none)').addClass('d-none');
                     container2.triggerAll('click-next-month change-month');
                 })
                 .on('mouseleave', '[data-date]', function (e) {
@@ -813,8 +816,10 @@
                     let date = new Date($column.data('date'));
                     let events = $column.data('events');
                     container2.find('.js-day-name').html(date.showDateFormatted());
+                    const c = settings.eventListContainer !== null ? $(settings.eventListContainer) : container2;
                     drawEventList(container2, events, date);
-                    container2.find('.js-collapse.d-none').removeClass('d-none');
+
+                    c.find('.js-collapse.d-none').removeClass('d-none');
                     container2.trigger('change-day', [date, events]);
                 });
         }
@@ -829,7 +834,8 @@
         function drawEventList(containerElement, events, date) {
             $(containerElement).trigger('show-event-list', [events]);
             const setup = containerElement.data('settings');
-            let eventList = $(containerElement).find('.js-events');
+            const c = setup.eventListContainer !== null ? $(setup.eventListContainer) : containerElement;
+            let eventList = c.find('.js-events');
             eventList.empty();
             if (!events.length) {
                 $('<div>', {
