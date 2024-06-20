@@ -20,6 +20,7 @@ const options = {
     "showEventEditButton": false, // Should an edit button appear on all appointments?
     "showEventRemoveButton": false, // Should a delete button appear for all appointments?
     "showPopover": true, // If the value is true, a popover will pop up on every day that contains appointments
+    "eventListContainer" : null, // if set, the eventlist will appent to this container
     "popoverConfig": { //The popover configuration can be set here, more at https://getbootstrap.com/docs/5.3/components/popovers/#options
         animation: false,
         html: true,

@@ -163,6 +163,7 @@
             },
             showEventEditButton: false,
             showEventRemoveButton: false,
+            eventListContainer: null,
             formatPopoverContent(events) {
                 return '<div class="list-group list-group-flush">' + events.map(e => {
                     return `<div class="list-group-itemp p-1">${e.title}</div>`;
@@ -431,6 +432,14 @@
 
     }
 
+    function isValidCssWidth(value) {
+        // Matches numbers with px, em, rem, vh, vw, % units or no units
+        var numericRegEx = /^([0-9]+(\.[0-9]+)?)(px|em|rem|vh|vw|%)?$/;
+        // Matches keywords such as auto, initial, inherit, unset, fit-content
+        var keywordRegEx = /^(auto|inherit|initial|unset|fit-content)$/;
+        return numericRegEx.test(value) || keywordRegEx.test(value);
+    }
+
     /**
      *
      * @param {object} container
@@ -449,13 +458,33 @@
 			    </div>
             `;
         }
-        console.log('######### SETTINGS ON DRAW TEMPLATE', settings.width);
+        
+        let eventListContainer = '';
+        let list = '';
+        if (settings.eventListContainer === null){
+            eventListContainer = list = `
+                 <div class="p-2 js-collapse d-none">
+                    <div class="mb-0 rounded-0 border-top" style="width: 100%">
+                        <div class="text-center fw-bold py-2 js-day-name bg-transparent"></div>
+                        <div class="js-events list-group list-group-flush"></div>
+                    </div>
+                </div>
+        `;
+        }
+        else{
+            eventListContainer = `
+                 <div class="js-collapse d-none">
+                    <div class="text-center fw-bold py-2 js-day-name bg-transparent"></div>
+                    <div class="js-events list-group list-group-flush"></div>
+                </div>
+            `;
+            $(eventListContainer).appendTo(settings.eventListContainer);
+        }
+
         container
             // .width(settings.width)
             // .css({width: settings.width})
             .html(`
-            <div class="d-flex">
-                <div>
                     ${todayHeader}
                     <div class="d-flex flex-nowrap justify-content-between align-items-center p-2">
                         <a href="#" class="btn btn-link text-decoration-none btn-prev-month"><i class="${settings.icons.prev}"></i></a>
@@ -467,16 +496,7 @@
                     </div>
                     <div class="js-weeks"></div>
                     <div class="dates"></div>
-                </div>
-                <div>
-                    <div class="p-2 js-collapse d-none">
-                        <div class="mb-0 rounded-0 border-top" style="width: 100%">
-                            <div class="text-center fw-bold py-2 js-day-name bg-transparent"></div>
-                            <div class="js-events list-group list-group-flush"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+                   ${list}
         `);
 
         let cellWidthHeight = getCellWidthHeight(container); // 7 days + calendar week
@@ -884,7 +904,6 @@
                 container.addClass(CONTAINER_WRAPPER_CLASS.substring(1));
                 container.data('current', new Date());
                 const settings = $.extend(true, $.bsCalendar.DEFAULTS, options || {});
-                console.log('######### SETTINGS ON INIT', settings.width);
                 settings.url = container.data('target') || container.data('bsTarget') || $.bsCalendar.DEFAULTS.url;
                 Date.setLocale(settings.locale);
                 container.data('settings', settings);
