@@ -454,21 +454,27 @@
             // .width(settings.width)
             // .css({width: settings.width})
             .html(`
-			${todayHeader}
-            <div class="d-flex flex-nowrap justify-content-between align-items-center p-2">
-                <a href="#" class="btn btn-link text-decoration-none btn-prev-month"><i class="${settings.icons.prev}"></i></a>
-                <a href="#" class="btn btn-link text-decoration-none  mx-1 flex-fill btn-curr-month month-name"></a>
-                <a href="#" class="btn btn-link text-decoration-none  btn-next-month"><i class="${settings.icons.next}"></i></a>
-            </div>
-            <div class="d-flex flex-nowrap align-items-center js-weekdays bootstrap-calendar-weekday-row">
-                <div class="text-center"></div>
-            </div>
-             <div class="js-weeks"></div>
-            <div class="dates"></div>
-            <div class="p-2 js-collapse d-none">
-                <div class="mb-0 rounded-0 border-top" style="width: 100%">
-                    <div class="text-center fw-bold py-2 js-day-name bg-transparent"></div>
-                    <div class="js-events list-group list-group-flush"></div>
+            <div class="d-flex">
+                <div>
+                    ${todayHeader}
+                    <div class="d-flex flex-nowrap justify-content-between align-items-center p-2">
+                        <a href="#" class="btn btn-link text-decoration-none btn-prev-month"><i class="${settings.icons.prev}"></i></a>
+                        <a href="#" class="btn btn-link text-decoration-none  mx-1 flex-fill btn-curr-month month-name"></a>
+                        <a href="#" class="btn btn-link text-decoration-none  btn-next-month"><i class="${settings.icons.next}"></i></a>
+                    </div>
+                    <div class="d-flex flex-nowrap align-items-center js-weekdays bootstrap-calendar-weekday-row">
+                        <div class="text-center"></div>
+                    </div>
+                    <div class="js-weeks"></div>
+                    <div class="dates"></div>
+                </div>
+                <div>
+                    <div class="p-2 js-collapse d-none">
+                        <div class="mb-0 rounded-0 border-top" style="width: 100%">
+                            <div class="text-center fw-bold py-2 js-day-name bg-transparent"></div>
+                            <div class="js-events list-group list-group-flush"></div>
+                        </div>
+                    </div>
                 </div>
             </div>
         `);
@@ -876,7 +882,6 @@
         function init() {
             if (!container.data('init')) {
                 container.addClass(CONTAINER_WRAPPER_CLASS.substring(1));
-
                 container.data('current', new Date());
                 const settings = $.extend(true, $.bsCalendar.DEFAULTS, options || {});
                 console.log('######### SETTINGS ON INIT', settings.width);
