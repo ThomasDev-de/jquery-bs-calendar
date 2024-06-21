@@ -8,17 +8,13 @@ The calendar can be included in all Boostrap elements (.card, .navbar, .offcanva
 ```javascript
 const options = {
     "locale": "de", // Sets the language of days and months (default 'en-US')
-    "url": null, // The URL to the endpoint where the dates will be loaded.
+    "url": null, // The URL to the endpoint where the dates will be loaded or a function that returns a array with events.
     "width": "310px", // Sets the width of the container. All subelements are calculated from the width of the container.
     "icons": { // Here you can change the icon classes. Bootstrap icons are set as default.
         "prev": 'bi bi-chevron-left',
-        "next": 'bi bi-chevron-right',
-        "eventEdit": 'bi bi-pen',  // @deprecated
-        "eventRemove": 'bi bi-calendar2-x'  // @deprecated
+        "next": 'bi bi-chevron-right'
     },
     "showTodayHeader": true, // Show or hide the header of the calendar, which contains information about today.
-    "showEventEditButton": false, // @deprecated Should an edit button appear on all appointments?
-    "showEventRemoveButton": false, // @deprecated Should a delete button appear for all appointments?
     "showPopover": true, // If the value is true, a popover will pop up on every day that contains appointments
     "eventListContainer" : null, // if set, the eventlist will appent to this container
     "dateEvents" : { // a list of events for each event
@@ -47,10 +43,6 @@ const options = {
     }, // The display when there are no appointments on the selected date.
     "queryParams": function (params) {
     }, // Additional parameters can be sent to the server here. From and To are always sent.
-    "onClickEditEvent": function (e, event) {  // @deprecated
-    }, // What should happen when the edit button is clicked at the appointment?
-    "onClickDeleteEvent": function (e, event) {  // @deprecated
-    }, // What should happen when the delete button is clicked at the appointment?
 }
 ```
 

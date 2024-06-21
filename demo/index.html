@@ -90,7 +90,7 @@
 
 <script src="../vendor/components/jquery/jquery.min.js"></script>
 <script src="../vendor/twbs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-<script src="../vendor/webcito/js-date-extensions/dist/js-date-extensions.js"></script>
+<!--<script src="../vendor/webcito/js-date-extensions/dist/js-date-extensions.js"></script>-->
 <script src="../dist/jquery.bs.calendar.js"></script>
 <script>
     $(document).ready(function() {
@@ -105,6 +105,27 @@
         $('#calendar_dropdown').bsCalendar({width: 300});
         $('#calendar_inline').bsCalendar({
             width: '450px',
+            queryParams(p){
+                p.lol = 'rofl';
+                return p;
+            },
+            url(data) {
+                return $.getJSON('events.json').then(json => {
+                    let fromDate = new Date(data.from);
+                    let toDate = new Date(data.to);
+                    let diffInTime = toDate.getTime() - fromDate.getTime();
+
+                    json.forEach(event => {
+                        let randomTime = fromDate.getTime() + Math.random() * diffInTime;
+                        let randomDate = new Date(randomTime);
+
+                        event.start = randomDate.toISOString();
+                        event.end = new Date(randomDate.getTime() + 24*60*60*1000).toISOString();
+                    });
+
+                    return json;
+                });
+            },
             dateEvents: {
                 'click .js-edit-event'(e, event){
                     e.preventDefault();

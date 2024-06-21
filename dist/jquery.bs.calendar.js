@@ -154,9 +154,7 @@
             width: '300px',
             icons: {
                 prev: 'bi bi-chevron-left',
-                next: 'bi bi-chevron-right',
-                eventEdit: 'bi bi-pen',
-                eventRemove: 'bi bi-calendar2-x'
+                next: 'bi bi-chevron-right'
             },
             showTodayHeader: true,
             showPopover: true,
@@ -167,9 +165,6 @@
                 placement: 'top',
                 trigger: 'hover'
             },
-
-            showEventEditButton: false, // @deprecated
-            showEventRemoveButton: false,  // @deprecated
             eventListContainer: null,
             dateEvents: null,
             formatPopoverContent(events) {
@@ -186,14 +181,6 @@
             }, onClickDeleteEvent(e, event) {  // @deprecated
             },
         }
-    };
-
-    const eventEditButton = {
-        class: 'btn btn-link p-0 js-edit-event',
-    };
-
-    const eventRemoveButton = {
-        class: 'btn btn-link p-0 js-delete-event',
     };
 
     /**
@@ -231,6 +218,7 @@
         }
         return this;
     }
+
     /**
      *
      * @param year
@@ -239,7 +227,6 @@
     Date.isLeapYear = function (year) {
         return (((year % 4 === 0) && (year % 100 !== 0)) || (year % 400 === 0));
     };
-
 
     /**
      * Adds a specified number of months to the date
@@ -263,7 +250,6 @@
         return new Date(this.getFullYear(), this.getMonth(), 1);
     }
 
-
     /**
      * Returns the last day of the month for the given date.
      *
@@ -284,7 +270,6 @@
         return new Date(d.setDate(diff));
     }
 
-
     /**
      * Determine the previous Monday of the current date
      * @returns {Date}
@@ -294,7 +279,6 @@
         let day = d.getDay(), diff = d.getDate() - day + (day === 0 ? -6 : 1); // adjust when day is sunday
         return new Date(d.setDate(diff));
     }
-
 
     /**
      * Determine the Sunday of the current date
@@ -411,7 +395,6 @@
         `;
     }
 
-    // noinspection JSUnusedLocalSymbols
     /**
      * Draws a no event message on the specified date.
      *
@@ -420,30 +403,48 @@
      */
     function drawNoEvent(date) {
         return `
-        <div class="p-2" style="font-size:.8em">
-        <h6 class="mb-0 text-center">No appointments on this day</h6>
-        </div>
+            <div class="p-2" style="font-size:.8em">
+                <h6 class="mb-0 text-center">No appointments on this day</h6>
+            </div>
         `;
     }
 
+    /**
+     * Formats a given date into a string representation.
+     *
+     * @param {Date} date - The date object to be formatted.
+     * @return {string} - The formatted date string.
+     */
     function getFormattedDate(date) {
         return `${date.getDate()}. ${date.getMonthName()} ${date.getFullYear()}`;
     }
 
+    /**
+     * Retrieves the font size based on the width and height of the container element.
+     *
+     * @param {jQuery} containerElement - The container element to calculate the font size for.
+     * @returns {number} The calculated font size.
+     */
     function getFontSize(containerElement) {
         const widthHeight = getCellWidthHeight(containerElement);
         return widthHeight / 3;
     }
 
+    /**
+     * Calculates the width and height of a cell within the provided container element.
+     *
+     * @param {jQuery} containerElement - The container element in which the cell is located.
+     * @return {number} - The calculated width and height of the cell.
+     */
     function getCellWidthHeight(containerElement) {
         return containerElement.width() / 8; // 7 days + calendar week
 
     }
 
-
     /**
-     *
-     * @param {object} container
+     * Draws a template for the calendar in the specified container.
+     * @param {jQuery} container - The container element where the template will be drawn.
+     * @return {void}
      */
     function drawTemplate(container) {
 
@@ -527,6 +528,11 @@
         });
     }
 
+    /**
+     * Highlights the day name in the given container.
+     * @param {jQuery} container - The container element where the day name will be highlighted.
+     * @return {void}
+     */
     function highlightDayName(container) {
         const highlightClasses = 'text-warning fw-bold';
         const iSeeToday = container.find('.js-today').length !== 0;
@@ -578,25 +584,28 @@
         /**
          * Retrieves events from a server based on the provided parameters.
          *
-         * @param {object} container - The container element where the events will be loaded.
+         * @param {jQuery} container - The container element where the events will be loaded.
          * @param {Date} selected - The selected date for which events should be retrieved.
          * @param {function} callback - The callback function to be called with the retrieved events.
          * @return {void}
          */
         function getEvents(container, selected, callback) {
             const setup = container.data('settings')
-            if (xhr) {
-                xhr.abort();
-                xhr = null;
-            }
+            let data = {
+                from: selected.clone().getFirstDayOfMonth().getFirstDayOfWeek().formatDate(false),
+                to: selected.clone().getLastDayOfMonth().getLastDayOfWeek().formatDate(false)
+            };
 
             if (!setup.url) {
                 callback([]);
-            } else {
-                let data = {
-                    from: selected.clone().getFirstDayOfMonth().getFirstDayOfWeek().formatDate(false),
-                    to: selected.clone().getLastDayOfMonth().getLastDayOfWeek().formatDate(false)
-                };
+            } else if(typeof setup.url === "function") {
+                setup.url(setup.queryParams(data)).then(callback);
+            } else if(typeof setup.url === "string") {
+                if (xhr) {
+                    xhr.abort();
+                    xhr = null;
+                }
+
                 // noinspection JSUnusedGlobalSymbols
                 xhr = $.ajax({
                     async: true,
@@ -617,8 +626,6 @@
          * @param {Date|null|undefined} selectedDate - The selected date to display the calendar for
          */
         function drawCalendar(containerElement, selectedDate = null) {
-            console.log('calendar: drawCalendar')
-            console.log('selectedDate', selectedDate)
             let forceDate = true;
             if (!selectedDate) {
                 forceDate = false;
@@ -909,7 +916,7 @@
                         class: 'js-event d-flex justify-content-between align-items-center list-group-item p-0',
                         html: `<div class="flex-fill">${eventHtml}</div><div><div class="btn-group-vertical btn-group-sm" role="group"></div></div>`
                     }).appendTo(eventList);
-                    getEventButtons(containerElement, event, eventWrapper.find('.btn-group-vertical'));
+                    // getEventButtons(containerElement, event, eventWrapper.find('.btn-group-vertical'));
                     eventWrapper.data('event', event);
                 });
             }
@@ -917,41 +924,6 @@
             $(containerElement).trigger('shown-event-list', [events]);
 
 
-        }
-
-        /**
-         * Retrieves the event buttons for a given container, event, and wrap.
-         *
-         * @param {jQuery} containerElement - The jQuery object representing the container element.
-         * @param {Object} event - The event object.
-         * @param {jQuery} wrap - The jQuery object representing the wrap element.
-         */
-        function getEventButtons(containerElement, event, wrap) {
-            let settings = $(containerElement).data('settings');
-            let editable = !event.hasOwnProperty('editable') || event.editable;
-            let deletable = !event.hasOwnProperty('deletable') || event.deletable;
-            if (settings.showEventEditButton && editable) {
-                let editButton = $('<a>', {
-                    href: '#',
-                    class: eventEditButton.class,
-                    html: `<i class="${settings.icons.eventEdit}"></i>`
-                }).appendTo(wrap);
-
-                editButton.on('click', function (e) {
-                    e.preventDefault();
-                    settings.onClickEditEvent(e, event);
-                });
-            }
-            if (settings.showEventRemoveButton && deletable) {
-                let removeButton = $('<a>', {
-                    href: '#', class: eventRemoveButton.class, html: `<i class="${settings.icons.eventRemove}"></i>`
-                }).appendTo(wrap);
-
-                removeButton.on('click', function (e) {
-                    e.preventDefault();
-                    settings.onClickDeleteEvent(e, event);
-                });
-            }
         }
 
         /**
@@ -980,12 +952,16 @@
 
         init();
 
+        /**
+         * Refreshes the calendar with the provided parameters.
+         *
+         * @param {jQuery} c - The calendar container element.
+         * @param {Object|string|number} p - The parameters to configure the calendar.
+         * @return {void}
+         */
         function refresh(c, p) {
-            console.log('calendar: refresh')
-            console.log('params', p)
             c.empty();
             const dateAfter = c.data('current');
-            console.log('current', dateAfter)
             drawTemplate(c);
             if (!p) {
                 drawCalendar(c, dateAfter);
@@ -994,25 +970,41 @@
             }
         }
 
+        /**
+         * Sets the date of the calendar and updates it accordingly.
+         *
+         * @param {jQuery} c - The calendar element.
+         * @param {String|Number|Date} p - The new date to set.
+         * @return {void}
+         */
         function setDate(c, p) {
-            console.log('calendar: setDate')
             const dateAfter = new Date(p);
             c.data('current', dateAfter);
-            console.log('current', dateAfter)
             drawCalendar(c, dateAfter);
+        }
+
+        /**
+         * Updates the options for a given element.
+         *
+         * @param {jQuery} c - The jQuery object representing the element.
+         * @param {Object} p - The new options to be merged with the current settings.
+         * @return {void}
+         */
+        function updateOptions(c, p){
+            const currentSettings = c.data('settings');
+            const newSettings = $.extend(true, currentSettings, p || {});
+            Date.setLocale(newSettings.locale);
+            const currentDate = c.data('current');
+            c.data('settings', newSettings);
+            c.empty();
+            drawTemplate(c);
+            drawCalendar(c, currentDate);
         }
 
         if (isMethodSet) {
             switch (options) {
                 case 'updateOptions': {
-                    const beforeOptions = container.data('settings');
-                    const newOptions = $.extend(true, beforeOptions, params || {});
-                    Date.setLocale(newOptions.locale);
-                    const dateAfter = container.data('current');
-                    container.data('settings', newOptions);
-                    container.empty();
-                    drawTemplate(container);
-                    drawCalendar(container, dateAfter);
+                    updateOptions(container, params);
                     break;
                 }
                 case 'refresh': {
@@ -1023,6 +1015,8 @@
                     setDate(container, params);
                     break;
                 }
+                default:
+                    console.log('methodName not found');
             }
         }
 
