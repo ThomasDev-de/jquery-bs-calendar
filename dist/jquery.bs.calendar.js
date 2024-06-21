@@ -785,26 +785,24 @@
                 'mouseup'
             ];
 
-            const eventListContainer = settings.eventListContainer !== null ? $(settings.eventListContainer) : $(containerElement);
+            // If the events were integrated outside the calendar container,
+            // the events must be fired on the external container
+            const eventListContainer =
+                settings.eventListContainer !== null && $(settings.eventListContainer).length
+                    ? $(settings.eventListContainer)
+                    : $(containerElement);
+
             eventListContainer
                 .on(eventTypes.join(' '), '.js-event', function (e) {
                     let target = $(e.target);
                     let $column = $(e.currentTarget);
                     let event = $column.data('event');
-                    let container2 = $column.closest(CONTAINER_WRAPPER_CLASS);
-                    /**
-                     * @deprecated
-                     */
-                    container2.trigger('click-event', [event]);
-
                     if (settings.dateEvents && typeof settings.dateEvents === "object") {
                         for (let key in settings.dateEvents) {
                             let eventType_selector = key.split(' ');
                             let eventType = eventType_selector[0];
                             let selector = eventType_selector[1];
-
                             let element = target.closest(selector);
-                            console.log('element:', element);
                             if (e.type === eventType && element.length) {
                                 e.stopPropagation();
                                 settings.dateEvents[key].call(this, e, event, element);
@@ -812,8 +810,8 @@
                         }
                     }
                 })
-            containerElement
 
+            containerElement
                 .on('click', '.btn-prev-month', function (e) {
                     e.preventDefault();
                     const btn = $(e.currentTarget);
