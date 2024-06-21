@@ -618,7 +618,9 @@
          */
         function drawCalendar(containerElement, selectedDate = null) {
 
+            let forceDate = true;
             if (!selectedDate) {
+                forceDate = false;
                 selectedDate = new Date();
             }
             // let activeDate = $(containerElement).find('[data-date].active').length ? $(containerElement).find('[data-date].active').data('date') : null;
@@ -755,6 +757,15 @@
 
                 if (foundToday) {
                     $(containerElement).find('.js-today').trigger('click');
+                }
+                else if(forceDate){
+                    let year = selectedDate.getFullYear();
+                    let month = ("0" + (selectedDate.getMonth() + 1)).slice(-2); // add leading zero
+                    let day = ("0" + selectedDate.getDate()).slice(-2); // add leading zero
+
+                    let formattedDate = year + '-' + month + '-' + day;
+
+                    $(containerElement).find('[data-date="'+formattedDate+'"]').trigger('click');
                 }
             });
         }
