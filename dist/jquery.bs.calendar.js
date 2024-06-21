@@ -617,11 +617,12 @@
          * @param {Date|null|undefined} selectedDate - The selected date to display the calendar for
          */
         function drawCalendar(containerElement, selectedDate = null) {
-
+            console.log('calendar: drawCalendar')
+            console.log('selectedDate', selectedDate)
             let forceDate = true;
             if (!selectedDate) {
                 forceDate = false;
-                selectedDate = new Date();
+                selectedDate = containerElement.data('current');
             }
             // let activeDate = $(containerElement).find('[data-date].active').length ? $(containerElement).find('[data-date].active').data('date') : null;
 
@@ -755,17 +756,17 @@
                     });
                 }
 
-                if (foundToday) {
-                    $(containerElement).find('.js-today').trigger('click');
-                }
-                else if(forceDate){
+
+                if (forceDate) {
                     let year = selectedDate.getFullYear();
                     let month = ("0" + (selectedDate.getMonth() + 1)).slice(-2); // add leading zero
                     let day = ("0" + selectedDate.getDate()).slice(-2); // add leading zero
 
                     let formattedDate = year + '-' + month + '-' + day;
 
-                    $(containerElement).find('[data-date="'+formattedDate+'"]').trigger('click');
+                    $(containerElement).find('[data-date="' + formattedDate + '"]').trigger('click');
+                } else if (foundToday) {
+                    $(containerElement).find('.js-today').trigger('click');
                 }
             });
         }
@@ -873,6 +874,7 @@
                     let date = new Date($column.data('date'));
                     let events = $column.data('events');
                     container2.data('current', date);
+                    console.log('change current to', date)
                     container2.find('.js-day-name').html(date.showDateFormatted());
                     const c = settings.eventListContainer !== null ? $(settings.eventListContainer) : container2;
                     drawEventList(container2, events, date);
@@ -979,21 +981,25 @@
 
         init();
 
-        function refresh(c, p){
+        function refresh(c, p) {
+            console.log('calendar: refresh')
+            console.log('params', p)
             c.empty();
             const dateAfter = c.data('current');
+            console.log('current', dateAfter)
             drawTemplate(c);
             if (!p) {
                 drawCalendar(c, dateAfter);
-            }
-            else{
+            } else {
                 setDate(c, p)
             }
         }
 
-        function setDate(c, p){
+        function setDate(c, p) {
+            console.log('calendar: setDate')
             const dateAfter = new Date(p);
             c.data('current', dateAfter);
+            console.log('current', dateAfter)
             drawCalendar(c, dateAfter);
         }
 
