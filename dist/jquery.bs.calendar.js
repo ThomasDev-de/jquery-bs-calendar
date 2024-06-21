@@ -478,7 +478,7 @@
                     <div class="js-events list-group list-group-flush"></div>
                 </div>
             `;
-            $(eventListContainer).appendTo(settings.eventListContainer);
+            $(settings.eventListContainer).html(eventListContainer);
         }
 
         container
