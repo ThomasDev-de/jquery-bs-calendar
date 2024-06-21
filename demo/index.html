@@ -130,7 +130,7 @@
             $('#calendar_inline').bsCalendar('refresh');
         });
         $('#btnSetToday').on('click', function(e){
-            $('#calendar_inline').bsCalendar('setDate', new Date());
+            $('#calendar_inline').bsCalendar('refresh', new Date());
         });
     });
 </script>

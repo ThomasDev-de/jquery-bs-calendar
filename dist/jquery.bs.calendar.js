@@ -835,7 +835,6 @@
                     const c = settings.eventListContainer !== null ? $(settings.eventListContainer) : container2;
                     c.find('.js-collapse:not(.d-none)').addClass('d-none');
                     container2.triggerAll('click-prev-month change-month');
-
                 })
                 .on('click', '.btn-curr-month', function (e) {
                     e.preventDefault();
