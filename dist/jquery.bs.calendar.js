@@ -171,7 +171,7 @@
             showEventEditButton: false, // @deprecated
             showEventRemoveButton: false,  // @deprecated
             eventListContainer: null,
-            dateEvents : null,
+            dateEvents: null,
             formatPopoverContent(events) {
                 return '<div class="list-group list-group-flush">' + events.map(e => {
                     return `<div class="list-group-itemp p-1">${e.title}</div>`;
@@ -459,10 +459,10 @@
 			    </div>
             `;
         }
-        
+
         let eventListContainer;
         let list = '';
-        if (settings.eventListContainer === null){
+        if (settings.eventListContainer === null) {
             list = `
                  <div class="p-2 js-collapse d-none">
                     <div class="mb-0 rounded-0 border-top" style="width: 100%">
@@ -471,8 +471,7 @@
                     </div>
                 </div>
         `;
-        }
-        else{
+        } else {
             eventListContainer = `
                  <div class="js-collapse d-none">
                     <div class="text-center fw-bold py-2 js-day-name bg-transparent"></div>
@@ -739,14 +738,14 @@
                         const count = $(e).data('events').length;
                         if (count) {
                             $(e).find('.js-count-events').css({
-                                fontSize : '9px',
-                                height:'16px',
-                                width:'16px',
+                                fontSize: '9px',
+                                height: '16px',
+                                width: '16px',
                                 lineHeight: '16px',
                                 color: 'white',
                                 left: 'calc(50% - 8px)',
-                                bottom:'1px',
-                                margin:0
+                                bottom: '1px',
+                                margin: 0
                             }).text(count);
                             console.log(count);
                         }
@@ -785,9 +784,11 @@
                 'mousedown',
                 'mouseup'
             ];
-            containerElement
+
+            const eventListContainer = settings.eventListContainer !== null ? $(settings.eventListContainer) : $(containerElement);
+            eventListContainer
                 .on(eventTypes.join(' '), '.js-event', function (e) {
-                    let target = $(e.currentTarget);
+                    let target = $(e.target);
                     let $column = $(e.currentTarget);
                     let event = $column.data('event');
                     let container2 = $column.closest(CONTAINER_WRAPPER_CLASS);
@@ -803,14 +804,16 @@
                             let selector = eventType_selector[1];
 
                             let element = target.closest(selector);
+                            console.log('element:', element);
                             if (e.type === eventType && element.length) {
                                 e.stopPropagation();
                                 settings.dateEvents[key].call(this, e, event, element);
                             }
                         }
                     }
-
                 })
+            containerElement
+
                 .on('click', '.btn-prev-month', function (e) {
                     e.preventDefault();
                     const btn = $(e.currentTarget);
@@ -917,7 +920,9 @@
             let deletable = !event.hasOwnProperty('deletable') || event.deletable;
             if (settings.showEventEditButton && editable) {
                 let editButton = $('<a>', {
-                    href: '#', class: eventEditButton.class, html: `<i class="${settings.icons.eventEdit}"></i>`
+                    href: '#',
+                    class: eventEditButton.class,
+                    html: `<i class="${settings.icons.eventEdit}"><span>lol</span></i>`
                 }).appendTo(wrap);
 
                 editButton.on('click', function (e) {
