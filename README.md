@@ -13,14 +13,24 @@ const options = {
     "icons": { // Here you can change the icon classes. Bootstrap icons are set as default.
         "prev": 'bi bi-chevron-left',
         "next": 'bi bi-chevron-right',
-        "eventEdit": 'bi bi-pen',
-        "eventRemove": 'bi bi-calendar2-x'
+        "eventEdit": 'bi bi-pen',  // @deprecated
+        "eventRemove": 'bi bi-calendar2-x'  // @deprecated
     },
     "showTodayHeader": true, // Show or hide the header of the calendar, which contains information about today.
-    "showEventEditButton": false, // Should an edit button appear on all appointments?
-    "showEventRemoveButton": false, // Should a delete button appear for all appointments?
+    "showEventEditButton": false, // @deprecated Should an edit button appear on all appointments?
+    "showEventRemoveButton": false, // @deprecated Should a delete button appear for all appointments?
     "showPopover": true, // If the value is true, a popover will pop up on every day that contains appointments
     "eventListContainer" : null, // if set, the eventlist will appent to this container
+    "dateEvents" : { // a list of events for each event
+        "click .edit-button": function(e, event, $element) { // example 1
+            e.preventDefault();
+            console.log('event',event,'clicked on',$element.get(0));
+        }, 
+        "change .some-select": function(e, event, $element) { // example 2
+            e.preventDefault();
+            console.log('event',event,'select object',$element.get(0));
+        },
+    },
     "popoverConfig": { //The popover configuration can be set here, more at https://getbootstrap.com/docs/5.3/components/popovers/#options
         animation: false,
         html: true,
@@ -37,9 +47,9 @@ const options = {
     }, // The display when there are no appointments on the selected date.
     "queryParams": function (params) {
     }, // Additional parameters can be sent to the server here. From and To are always sent.
-    "onClickEditEvent": function (e, event) {
+    "onClickEditEvent": function (e, event) {  // @deprecated
     }, // What should happen when the edit button is clicked at the appointment?
-    "onClickDeleteEvent": function (e, event) {
+    "onClickDeleteEvent": function (e, event) {  // @deprecated
     }, // What should happen when the delete button is clicked at the appointment?
 }
 ```

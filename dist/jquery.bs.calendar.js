@@ -158,12 +158,20 @@
                 eventEdit: 'bi bi-pen',
                 eventRemove: 'bi bi-calendar2-x'
             },
-            showTodayHeader: true, showPopover: true, popoverConfig: {
-                animation: false, html: true, delay: 400, placement: 'top', trigger: 'hover'
+            showTodayHeader: true,
+            showPopover: true,
+            popoverConfig: {
+                animation: false,
+                html: true,
+                delay: 400,
+                placement: 'top',
+                trigger: 'hover'
             },
-            showEventEditButton: false,
-            showEventRemoveButton: false,
+
+            showEventEditButton: false, // @deprecated
+            showEventRemoveButton: false,  // @deprecated
             eventListContainer: null,
+            dateEvents : null,
             formatPopoverContent(events) {
                 return '<div class="list-group list-group-flush">' + events.map(e => {
                     return `<div class="list-group-itemp p-1">${e.title}</div>`;
@@ -174,18 +182,18 @@
                 return drawNoEvent(date);
             }, queryParams(params) {
                 return params;
-            }, onClickEditEvent(e, event) {
-            }, onClickDeleteEvent(e, event) {
+            }, onClickEditEvent(e, event) {  // @deprecated
+            }, onClickDeleteEvent(e, event) {  // @deprecated
             },
         }
     };
 
     const eventEditButton = {
-        class: 'btn btn-link p-0 .js-edit-event',
+        class: 'btn btn-link p-0 js-edit-event',
     };
 
     const eventRemoveButton = {
-        class: 'btn btn-link p-0 .js-delete-event',
+        class: 'btn btn-link p-0 js-delete-event',
     };
 
     /**
@@ -752,6 +760,12 @@
             });
         }
 
+        function formatEventName(eventName) {
+            // Diese Funktion formatiert event Namen so, dass sie dem Format in Ihren eventHandlers entsprechen.
+            // Für 'click' würde es einfach 'click' zurückgeben, aber für etwas wie 'change' könnte es 'changed' oder etwas ähnliches zurückgeben, je nachdem, wie Sie Ihre events formatiert haben
+            return eventName;
+        }
+
         /**
          * Attach event listeners to the container element.
          * Triggers various events when specific actions are performed.
@@ -760,12 +774,48 @@
          */
         function events(containerElement) {
             const settings = $(containerElement).data('settings');
+            let eventTypes = [
+                'click',
+                'change',
+                'focus',
+                'blur',
+                'keydown',
+                'keyup',
+                'submit',
+                'touchstart',
+                'touchmove',
+                'touchend',
+                'touchcancel',
+                'mouseenter',
+                'mouseleave',
+                'mousedown',
+                'mouseup'
+            ];
             containerElement
-                .on('click', '.js-event', function (e) {
+                .on(eventTypes.join(' '), '.js-event', function (e) {
+                    let target = $(e.target);
                     let $column = $(e.currentTarget);
                     let event = $column.data('event');
                     let container2 = $column.closest(CONTAINER_WRAPPER_CLASS);
-                    container2.trigger('click-event', [event]);
+                    /**
+                     * @deprecated
+                     */
+                    container2.trigger(e.type + '-event', [event]);
+
+                    if (settings.dateEvents && typeof settings.dateEvents === "object") {
+                        for (let key in settings.dateEvents) {
+                            let eventType_selector = key.split(' ');
+                            let eventType = eventType_selector[0];
+                            let selector = eventType_selector[1];
+
+                            let element = target.closest(selector);
+                            if (e.type === eventType && element.length) {
+                                e.stopPropagation();
+                                settings.dateEvents[key].call(this, e, event, element);
+                            }
+                        }
+                    }
+
                 })
                 .on('click', '.btn-prev-month', function (e) {
                     e.preventDefault();

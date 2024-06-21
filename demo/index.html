@@ -102,7 +102,19 @@
         // $.bsCalendar.setDefault('width', 5000);
 
         $('#calendar_dropdown').bsCalendar({width: 300});
-        $('#calendar_inline').bsCalendar({width: '450px'});
+        $('#calendar_inline').bsCalendar({
+            width: '450px',
+            dateEvents: {
+                'click .js-edit-event'(e, event, $el){
+                    e.preventDefault();
+                    alert('edit id ' + event.id + ' start at ' + event.start);
+                },
+                'click .js-delete-event'(e, event, $el){
+                    e.preventDefault();
+                    alert('delete event by id ' + event.id);
+                }
+            }
+        });
 
         $('#calendar_offcanvas').bsCalendar({width: '80%'});
         $('#calendar_navbar').bsCalendar({width: 300});
