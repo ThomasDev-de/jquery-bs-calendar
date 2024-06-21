@@ -70,6 +70,7 @@
                 <label for="floatingSelect">change language</label>
             </div>
             <div data-bs-toggle="calendar" id="calendar_inline" class="col shadow rounded"></div>
+            <button id="btnSetToday">heute</button>
         </div>
     </div>
 
@@ -127,6 +128,9 @@
             const theme = $(e.currentTarget).is(':checked') ? 'dark' : 'light';
             $('html').attr('data-bs-theme', theme)
             $('#calendar_inline').bsCalendar('refresh');
+        });
+        $('#btnSetToday').on('click', function(e){
+            $('#calendar_inline').bsCalendar('setDate', new Date());
         });
     });
 </script>

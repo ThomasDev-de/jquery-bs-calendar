@@ -979,6 +979,24 @@
 
         init();
 
+        function refresh(c, p){
+            c.empty();
+            const dateAfter = c.data('current');
+            drawTemplate(c);
+            if (!p) {
+                drawCalendar(c, dateAfter);
+            }
+            else{
+                setDate(c, p)
+            }
+        }
+
+        function setDate(c, p){
+            const dateAfter = new Date(p);
+            c.data('current', dateAfter);
+            drawCalendar(c, dateAfter);
+        }
+
         if (isMethodSet) {
             switch (options) {
                 case 'updateOptions': {
@@ -993,16 +1011,11 @@
                     break;
                 }
                 case 'refresh': {
-                    container.empty();
-                    const dateAfter = container.data('current');
-                    drawTemplate(container);
-                    drawCalendar(container, dateAfter);
+                    refresh(container, params);
                     break;
                 }
                 case 'setDate': {
-                    const dateAfter = new Date(params);
-                    container.data('current', dateAfter);
-                    drawCalendar(container, dateAfter);
+                    setDate(container, params);
                     break;
                 }
             }
