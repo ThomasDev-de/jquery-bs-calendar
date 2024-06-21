@@ -843,6 +843,7 @@
                     const dateBefore = container2.data('current');
                     const dateAfter = dateBefore.clone().addMonths(1);
                     container2.data('current', dateAfter)
+
                     drawCalendar(container2, dateAfter);
                     const c = settings.eventListContainer !== null ? $(settings.eventListContainer) : container2;
                     c.find('.js-collapse:not(.d-none)').addClass('d-none');
@@ -860,6 +861,7 @@
                     $column.addClass('active');
                     let date = new Date($column.data('date'));
                     let events = $column.data('events');
+                    container2.data('current', date);
                     container2.find('.js-day-name').html(date.showDateFormatted());
                     const c = settings.eventListContainer !== null ? $(settings.eventListContainer) : container2;
                     drawEventList(container2, events, date);
@@ -920,7 +922,7 @@
                 let editButton = $('<a>', {
                     href: '#',
                     class: eventEditButton.class,
-                    html: `<i class="${settings.icons.eventEdit}"><span>lol</span></i>`
+                    html: `<i class="${settings.icons.eventEdit}"></i>`
                 }).appendTo(wrap);
 
                 editButton.on('click', function (e) {
