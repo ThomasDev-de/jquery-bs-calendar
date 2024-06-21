@@ -760,12 +760,6 @@
             });
         }
 
-        function formatEventName(eventName) {
-            // Diese Funktion formatiert event Namen so, dass sie dem Format in Ihren eventHandlers entsprechen.
-            // Für 'click' würde es einfach 'click' zurückgeben, aber für etwas wie 'change' könnte es 'changed' oder etwas ähnliches zurückgeben, je nachdem, wie Sie Ihre events formatiert haben
-            return eventName;
-        }
-
         /**
          * Attach event listeners to the container element.
          * Triggers various events when specific actions are performed.
@@ -800,7 +794,7 @@
                     /**
                      * @deprecated
                      */
-                    container2.trigger(e.type + '-event', [event]);
+                    container2.trigger('click-event', [event]);
 
                     if (settings.dateEvents && typeof settings.dateEvents === "object") {
                         for (let key in settings.dateEvents) {
