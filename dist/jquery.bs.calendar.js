@@ -787,7 +787,7 @@
             ];
             containerElement
                 .on(eventTypes.join(' '), '.js-event', function (e) {
-                    let target = $(e.target);
+                    let target = $(e.currentTarget);
                     let $column = $(e.currentTarget);
                     let event = $column.data('event');
                     let container2 = $column.closest(CONTAINER_WRAPPER_CLASS);
