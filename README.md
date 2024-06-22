@@ -15,8 +15,18 @@ const options = {
         "next": 'bi bi-chevron-right'
     },
     "showTodayHeader": true, // Show or hide the header of the calendar, which contains information about today.
-    "showPopover": true, // If the value is true, a popover will pop up on every day that contains appointments
     "eventListContainer" : null, // if set, the eventlist will appent to this container
+    "classes": {
+        "day": {
+            "all": 'rounded-circle',
+            "today": 'text-bg-primary',
+            "hover": 'shadow',
+            "active": 'border border-dark',
+            "inMonth": 'fw-bold',
+            "notInMonth": 'text-muted fw-small',
+            "eventCounter": 'text-bg-danger'
+        }
+    },
     "dateEvents" : { // a list of events for each event
         "click .edit-button": function(e, event, $element) { // example 1
             e.preventDefault();

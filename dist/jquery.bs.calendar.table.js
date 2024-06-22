@@ -196,7 +196,6 @@
     });
 
 
-
     /**
      *
      * @param days
@@ -452,7 +451,6 @@
      */
     function getCellWidthHeight(containerElement) {
         return containerElement.width() / 8; // 7 days + calendar week
-
     }
 
     /**
@@ -463,6 +461,7 @@
     function drawTemplate(container) {
 
         let settings = container.data('settings');
+
 
         let todayHeader = '';
         if (settings.showTodayHeader) {
@@ -506,26 +505,33 @@
                         <a href="#" class="btn btn-link text-decoration-none  mx-1 flex-fill btn-curr-month month-name"></a>
                         <a href="#" class="btn btn-link text-decoration-none  btn-next-month"><i class="${settings.icons.next}"></i></a>
                     </div>
-                    <div class="d-flex flex-nowrap align-items-center js-weekdays bootstrap-calendar-weekday-row">
-                        <div class="text-center"></div>
-                    </div>
+<!--                    <div class="d-flex flex-nowrap align-items-center js-weekdays bootstrap-calendar-weekday-row">-->
+<!--                        <div class="text-center"></div>-->
+<!--                    </div>-->
+                    <table class="table align-middle table-borderless border">
+                        <thead><tr><th></th></tr></thead> 
+                        <tbody></tbody>
+                    </table>
                     <div class="js-weeks"></div>
                     <div class="dates"></div>
                    ${list}
         `);
 
-        let cellWidthHeight = getCellWidthHeight(container); // 7 days + calendar week
-        let fontSize = getFontSize(container);
+        const table = container.find('table:first');
+        const tableHeadTr = table.find('thead tr:first');
+
+        // let cellWidthHeight = getCellWidthHeight(container); // 7 days + calendar week
+        // let fontSize = getFontSize(container);
         // alert(fontSize);
-        let cellCss = {
-            color: '#adadad',
-            lineHeight: cellWidthHeight + 'px',
-            fontSize: fontSize + 'px',
-            height: cellWidthHeight,
-            width: cellWidthHeight,
-        };
+        // let cellCss = {
+        //     color: '#adadad',
+        //     lineHeight: cellWidthHeight + 'px',
+        //     fontSize: fontSize + 'px',
+        //     height: cellWidthHeight,
+        //     width: cellWidthHeight,
+        // };
         // console.log(getCellWidthHeight(container));
-        container.find('.js-weekdays div:first').css(cellCss);
+        // container.find('.js-weekdays div:first').css(cellCss);
 
 
         let currentDayName = '';
@@ -535,10 +541,15 @@
 
 
         Date.getDayNames(true).forEach(wd => {
-            const addClass = wd === currentDayName ? 'text-warning' : '';
-            $('<div>', {
-                html: wd, class: 'js-day-name-short text-center bootstrap-calendar-weekday' + addClass, css: cellCss,
-            }).appendTo(container.find('.js-weekdays'));
+            // const addClass = wd === currentDayName ? 'text-warning' : '';
+            // $('<div>', {
+            //     html: wd, class: 'js-day-name-short text-center bootstrap-calendar-weekday' + addClass, css: cellCss,
+            // }).appendTo(container.find('.js-weekdays'));
+            $('<td>', {
+                class: 'border-bottom js-day-name-short text-muted',
+                css: getCellCss(container),
+                html: wd
+            }).appendTo(tableHeadTr);
         });
     }
 
@@ -550,12 +561,29 @@
     function highlightDayName(container) {
         const highlightClasses = 'text-warning fw-bold';
         const iSeeToday = container.find('.js-today').length !== 0;
-        const wrap = container.find('.js-weekdays');
+        const wrap = container.find('table thead');
         wrap.find('.js-day-name-short').removeClass(highlightClasses);
         if (iSeeToday) {
-            wrap.find('.js-day-name-short:eq(' + (container.find('.js-today').index() - 1) + ')').addClass(highlightClasses);
+            wrap.find('.js-day-name-short:eq(' + (container.find('.js-today').index() - 1) + ')').removeClass('text-muted')
+                .addClass(highlightClasses);
         }
 
+    }
+
+    function getCellCss(containerElement) {
+        const widthHeight = getCellWidthHeight(containerElement);
+        return {
+            borderRadius: '50%',
+            'text-align': 'center',
+            'vertical-align': 'middle',
+            width: widthHeight + 'px',
+            height: widthHeight + 'px',
+            fontSize: getFontSize(containerElement)
+        }
+    }
+
+    function getCellInner(innerHTML) {
+        return `${innerHTML}`;
     }
 
     /**
@@ -634,13 +662,16 @@
             }
         }
 
+
         /**
          * Draw a calendar based on a selected date
          * @param {jQuery|$} containerElement - The wrapper
          * @param {Date|null|undefined} selectedDate - The selected date to display the calendar for
          */
         function drawCalendar(containerElement, selectedDate = null) {
-            const settings = container.data('settings')
+            const settings = container.data('settings');
+            const table = containerElement.find('table:first');
+            const tableBody = table.find('tbody').empty();
             let forceDate = true;
             if (!selectedDate) {
                 forceDate = false;
@@ -672,24 +703,20 @@
             const widthHeight = getCellWidthHeight(containerElement);
             const fontSize = getFontSize(containerElement);
             calendar.forEach(week => {
+                const tr = $('<tr>').appendTo(tableBody);
                 let w = week.days[0].getWeek();
                 let highlight_week = currentYear === week.days[0].getFullYear() && currentWeek === w;
                 let highlightClass = highlight_week ? settings.classes.weekNameActive : settings.classes.weekName;
 
-                let weekContainer = $('<div>', {
+                $('<div>', {
                     class: 'd-flex flex-nowrap'
                 }).appendTo(wrap);
 
-                // calendar week
-                $('<div>', {
-                    class: 'd-flex justify-content-center align-items-center js-cal-row bootstrap-calendar-week', css: {
-                        fontSize: getFontSize(containerElement) + 'px',
-                        // color: '#adadad',
-                        width: widthHeight,
-                        height: widthHeight
-                    }, html: ['<small class="text-center mb-0 ' + highlightClass + '">' + w + '</small>'].join('')
-                }).appendTo(weekContainer);
-
+                 $('<td>', {
+                    text: w,
+                    class: 'border-end text-center ' + highlightClass,
+                    css: getCellCss(containerElement)
+                }).appendTo(tr);
                 week.days.forEach(day => {
                     const classes = [settings.classes.day.all];
                     const isToday = today.formatDate(false) === day.formatDate(false);
@@ -701,20 +728,22 @@
                     }
                     if (isInMonth) {
                         classes.push(settings.classes.day.inMonth)
-                    }
-                    else{
+                    } else {
                         classes.push(settings.classes.day.notInMonth);
                     }
-
-                    let col = $('<div>', {
+                    const dayTD = $('<td>', {
+                        class: 'position-relative p-1',
                         'data-date': day.formatDate(false),
-                        class: 'position-relative d-flex justify-content-center align-items-center bootstrap-calendar-day ' + classes.join(' '),
-                        css: {
-                            cursor: 'pointer', width: widthHeight, height: widthHeight
-                        },
-                        html: ['<div  style="font-size:' + fontSize + 'px">' + day.formatDate(true)[2] + '</div>', ['<small class="js-count-events position-absolute text-center rounded-circle bottom-0 start-50 translate-middle-x" style="width:4px; height:4px;">', '</small>'].join('')].join('')
-                    }).appendTo(weekContainer);
-                    col.data('events', []);
+                        css: getCellCss(containerElement)
+                    }).appendTo(tr);
+                    const addClasses = classes.join(' ');
+                    let html = getCellInner(
+                        '<div class="d-flex js-cell-inner  justify-content-center align-items-center '+addClasses+'" style="width:99%; height:99%"><span>' + day.formatDate(true)[2] + '</span></div>' +
+                        '<small class="js-count-events position-absolute bottom-0 start-50 rounded-circle translate-middle-x" style="width:4px; height:4px;"></small>'
+                    );
+                    dayTD.html(html)
+
+                    dayTD.data('events', []);
                 });
 
 
@@ -891,10 +920,10 @@
                     c.find('.js-collapse:not(.d-none)').addClass('d-none');
                     container2.triggerAll('click-next-month change-month');
                 })
-                .on('mouseenter touchstart', '[data-date]', function (e) {
+                .on('mouseenter touchstart', '[data-date] .js-cell-inner', function (e) {
                     const cell = $(e.currentTarget);
                     let container2 = cell.closest(CONTAINER_WRAPPER_CLASS);
-                    container2.find('[data-date]').removeClass(settings.classes.day.hover);
+                    container2.find('.js-cell-inner').removeClass(settings.classes.day.hover);
                     cell.addClass(settings.classes.day.hover);
                 })
                 .on('mouseleave touchend', '[data-date]', function (e) {
@@ -907,9 +936,10 @@
                 })
                 .on('click', '[data-date]', function (e) {
                     let $column = $(e.currentTarget);
+                    let $cellInner = $column.find('.js-cell-inner');
                     let container2 = $column.closest(CONTAINER_WRAPPER_CLASS);
-                    container2.find('[data-date].active').removeClass('active '+settings.classes.day.active);
-                    $column.not('.js-today').addClass('active '+settings.classes.day.active);
+                    container2.find('[data-date] .js-cell-inner.active').removeClass('active ' + settings.classes.day.active);
+                    $cellInner.not('.js-today').addClass('active ' + settings.classes.day.active);
                     let date = new Date($column.data('date'));
                     let events = $column.data('events');
                     container2.data('current', date);
@@ -983,7 +1013,6 @@
             return container;
         }
 
-        init();
 
         /**
          * Refreshes the calendar with the provided parameters.
@@ -1033,6 +1062,8 @@
             drawTemplate(c);
             drawCalendar(c, currentDate);
         }
+
+        init();
 
         if (isMethodSet) {
             switch (options) {
