@@ -786,6 +786,8 @@
                                 .data('events', dataEvents)
                                 .find(`.js-count-events`)
                                 .addClass(setup.classes.tableData.eventCounter)
+                                .height(4)
+                                .width(4);
                         }
 
                         if (column.length && dataEvents.length && typeof setup.popoverConfig === 'object') {
