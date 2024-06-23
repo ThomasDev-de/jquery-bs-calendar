@@ -24,14 +24,14 @@
                 next: 'bi bi-chevron-right'
             },
             classes: {
-                table: 'table table-sm table-borderless',
+                table: 'table tables-sm table-borderless',
                 tableHeaderCell: 'text-muted fw-lighter',
                 tableHeaderCellActive: 'text-warning fw-bold',
                 tableData: {
                     all: 'rounded-circle w-100 h-100 border',
                     today: 'text-bg-primary',
                     hover: 'shadow',
-                    active: 'border border-secondary',
+                    active: 'border-secondary',
                     inMonth: 'fw-bold',
                     notInMonth: 'text-muted fw-small',
                     eventCounter: 'start-50 bottom-0 translate-middle-x text-bg-danger rounded-pill'
