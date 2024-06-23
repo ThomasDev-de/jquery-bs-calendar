@@ -17,14 +17,17 @@ const options = {
     "showTodayHeader": true, // Show or hide the header of the calendar, which contains information about today.
     "eventListContainer" : null, // if set, the eventlist will appent to this container
     "classes": {
-        "day": {
-            "all": 'rounded-circle',
+        "table": 'table table-sm table-borderless',
+        "tableHeaderCell": 'text-muted fw-lighter',
+        "tableHeaderCellActive": 'text-warning fw-bold',
+        "tableData": {
+            "all": 'rounded-circle w-100 h-100 border',
             "today": 'text-bg-primary',
             "hover": 'shadow',
-            "active": 'border border-dark',
+            "active": 'border border-secondary',
             "inMonth": 'fw-bold',
             "notInMonth": 'text-muted fw-small',
-            "eventCounter": 'text-bg-danger'
+            "eventCounter": 'start-50 bottom-0 translate-middle-x text-bg-danger rounded-pill'
         }
     },
     "dateEvents" : { // a list of events for each event

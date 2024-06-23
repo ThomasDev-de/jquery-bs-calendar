@@ -92,7 +92,7 @@
 <script src="../vendor/components/jquery/jquery.min.js"></script>
 <script src="../vendor/twbs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 <!--<script src="../vendor/webcito/js-date-extensions/dist/js-date-extensions.js"></script>-->
-<script src="../dist/jquery.bs.calendar.table.js"></script>
+<script src="../dist/jquery.bs.calendar.min.js"></script>
 <script>
     $(document).ready(function() {
         $.bsCalendar.setDefaults({
@@ -110,6 +110,24 @@
                 p.lol = 'rofl';
                 return p;
             },
+            event: {
+                formatter(event){
+                    return `
+                    <div class="d-flex flex-column">
+                        <strong>${event.title}</strong>
+                        <div>
+                            <a href="#" class="btn-example btn btn-link">more</a>
+                        </div>
+                    </div>
+                `;
+                },
+                events: {
+                    'click .btn-example'(e, event){
+                        e.preventDefault();
+                        alert(JSON.stringify(event));
+                    }
+                }
+            },
             url(data) {
                 return $.getJSON('events.json').then(json => {
                     let fromDate = new Date(data.from);
@@ -126,16 +144,6 @@
 
                     return json;
                 });
-            },
-            dateEvents: {
-                'click .js-edit-event'(e, event){
-                    e.preventDefault();
-                    alert('edit id ' + event.id + ' start at ' + event.start);
-                },
-                'click .js-delete-event'(e, event){
-                    e.preventDefault();
-                    alert('delete event by id ' + event.id);
-                }
             }
         });
 
