@@ -30,10 +30,10 @@
                 tableData: {
                     all: 'rounded-circle w-100 h-100 border',
                     today: 'text-bg-primary',
-                    hover: 'shadow',
+                    hover: 'opacity-75',
                     active: 'border-secondary',
                     inMonth: 'fw-bold',
-                    notInMonth: 'text-muted fw-small',
+                    notInMonth: 'text-muted fw-small border-0 opacity-25',
                     eventCounter: 'start-50 bottom-0 translate-middle-x text-bg-danger rounded-pill'
                 }
             },
@@ -412,6 +412,7 @@
         `;
     }
 
+    // noinspection JSUnusedLocalSymbols
     /**
      * Draws a no event message on the specified date.
      *
@@ -509,12 +510,8 @@
                         <a href="#" class="btn btn-link text-decoration-none  mx-1 flex-fill btn-curr-month month-name"></a>
                         <a href="#" class="btn btn-link text-decoration-none  btn-next-month"><i class="${settings.icons.next}"></i></a>
                     </div>
-<!--                    <div class="d-flex flex-nowrap align-items-center js-weekdays bootstrap-calendar-weekday-row">-->
-<!--                        <div class="text-center"></div>-->
-<!--                    </div>-->
                     <table class="${settings.classes.table}">
                         <thead><tr><th class="text-center align-middle">
-<!--                        <i class="bi bi-calendar-week fs-4"></i>-->
                         </th></tr></thead> 
                         <tbody></tbody>
                     </table>
@@ -526,31 +523,7 @@
         const table = container.find('table:first');
         const tableHeadTr = table.find('thead tr:first');
 
-        // let cellWidthHeight = getCellWidthHeight(container); // 7 days + calendar week
-        // let fontSize = getFontSize(container);
-        // alert(fontSize);
-        // let cellCss = {
-        //     color: '#adadad',
-        //     lineHeight: cellWidthHeight + 'px',
-        //     fontSize: fontSize + 'px',
-        //     height: cellWidthHeight,
-        //     width: cellWidthHeight,
-        // };
-        // console.log(getCellWidthHeight(container));
-        // container.find('.js-weekdays div:first').css(cellCss);
-
-
-        let currentDayName = '';
-        if (container.find('.js-today').length) {
-            currentDayName = new Date().getDayName(true);
-        }
-
-
         Date.getDayNames(true).forEach(wd => {
-            // const addClass = wd === currentDayName ? 'text-warning' : '';
-            // $('<div>', {
-            //     html: wd, class: 'js-day-name-short text-center bootstrap-calendar-weekday' + addClass, css: cellCss,
-            // }).appendTo(container.find('.js-weekdays'));
             $('<th>', {
                 class: `js-day-name-short ${settings.classes.tableHeaderCell}`,
                 css: getCellCss(container),
@@ -565,7 +538,8 @@
      * @return {void}
      */
     function highlightDayName(container) {
-        const highlightClasses = 'text-warning fw-bold';
+        const settings = container.data('settings');
+        const highlightClasses = settings.classes.tableHeaderCellActive;
         const iSeeToday = container.find('.js-today').length !== 0;
         const wrap = container.find('table thead');
         wrap.find('.js-day-name-short').removeClass(highlightClasses);
@@ -675,7 +649,8 @@
          * @param {Date|null|undefined} selectedDate - The selected date to display the calendar for
          */
         function drawCalendar(containerElement, selectedDate = null) {
-            const settings = container.data('settings');
+            const settings = containerElement.data('settings');
+            console.log(containerElement.attr('id'), settings);
             const table = containerElement.find('table:first');
             const tableBody = table.find('tbody').empty();
             let forceDate = true;
@@ -707,7 +682,6 @@
             const currentYear = today.getFullYear();
             let foundToday = false;
             const widthHeight = getCellWidthHeight(containerElement);
-            const fontSize = getFontSize(containerElement);
             calendar.forEach(week => {
                 const tr = $('<tr>').appendTo(tableBody);
                 let w = week.days[0].getWeek();
@@ -818,7 +792,6 @@
                                 bottom: '1px',
                                 margin: 0
                             }).text(count);
-                            console.log(count);
                         }
 
                     });
@@ -951,7 +924,6 @@
                     let date = new Date($column.data('date'));
                     let events = $column.data('events');
                     container2.data('current', date);
-                    console.log('change current to', date)
                     container2.find('.js-day-name').html(date.showDateFormatted());
                     const c = settings.eventListContainer !== null ? $(settings.eventListContainer) : container2;
                     drawEventList(container2, events, date);
@@ -1004,9 +976,9 @@
          */
         function init() {
             if (!container.data('init')) {
-                container.addClass(CONTAINER_WRAPPER_CLASS.substring(1));
+                container.addClass(CONTAINER_WRAPPER_CLASS.substring(1) +' user-select-none');
                 container.data('current', new Date());
-                const settings = $.extend(true, $.bsCalendar.DEFAULTS, options || {});
+                const settings = $.extend(true, {}, $.bsCalendar.DEFAULTS, options || {});
                 settings.url = container.data('target') || container.data('bsTarget') || $.bsCalendar.DEFAULTS.url;
                 Date.setLocale(settings.locale);
                 container.data('settings', settings);

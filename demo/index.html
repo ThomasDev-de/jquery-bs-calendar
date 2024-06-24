@@ -6,7 +6,12 @@
     <title>jquery-bs-calendar demo</title>
     <link href="../vendor/twbs/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="../vendor/twbs/bootstrap-icons/font/bootstrap-icons.min.css" rel="stylesheet">
-
+    <!--suppress CssUnusedSymbol -->
+    <style>
+        .cursor-pointer {
+            cursor: pointer;
+        }
+    </style>
 </head>
 <body class="h-100 d-flex align-items-stretch">
 <div class="container flex-fill py-5 d-flex flex-column  align-items-center">
@@ -78,7 +83,7 @@
 
 </div>
 
-<div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasExample" aria-labelledby="offcanvasExampleLabel">
+<div class="offcanvas offcanvas-start" data-bs-theme="dark" tabindex="-1" id="offcanvasExample" aria-labelledby="offcanvasExampleLabel">
     <div class="offcanvas-header">
         <h5 class="offcanvas-title" id="offcanvasExampleLabel">Offcanvas</h5>
         <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
@@ -96,19 +101,33 @@
 <script>
     $(document).ready(function() {
         $.bsCalendar.setDefaults({
-            locale: 'en',
+            locale: 'de',
             url: 'events.json',
-            showEventEditButton: true,
-            showEventRemoveButton: true,
+            classes: {
+                tableData: {
+                    notInMonth: 'text-muted fw-small border-0 opacity-25',
+                }
+            },
         })
         // $.bsCalendar.setDefault('width', 5000);
 
         $('#calendar_dropdown').bsCalendar({width: 300});
         $('#calendar_inline').bsCalendar({
+            locale:'en',
             width: '450px',
-            queryParams(p){
-                p.lol = 'rofl';
-                return p;
+            classes: {
+                table: 'table tables-sm table-success',
+                tableHeaderCell: 'text-muted fw-lighter',
+                tableHeaderCellActive: 'text-success fw-bold',
+                tableData: {
+                    all: 'rounded-circle w-100 h-100 border border-2',
+                    today: 'border-success border-4',
+                    hover: 'opacity-75',
+                    active: 'border-secondary',
+                    inMonth: 'fw-bold cursor-pointer',
+                    notInMonth: 'text-muted fw-small border-0 opacity-25',
+                    eventCounter: 'start-50 bottom-0 translate-middle-x text-bg-danger rounded-pill'
+                }
             },
             event: {
                 formatter(event){
@@ -159,7 +178,7 @@
             $('html').attr('data-bs-theme', theme)
             $('#calendar_inline').bsCalendar('refresh');
         });
-        $('#btnSetToday').on('click', function(e){
+        $('#btnSetToday').on('click', function(){
             $('#calendar_inline').bsCalendar('refresh', new Date());
         });
     });
