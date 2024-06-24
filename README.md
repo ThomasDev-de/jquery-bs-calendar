@@ -23,6 +23,7 @@ The calendar can be included in all Boostrap elements (.card, .navbar, .offcanva
 | formatNoEvent        | `function`                    | see example below | The display when there are no appointments on the selected date.                                                                                                                                                      |
 
 ### full options example
+
 ```javascript
 const options = {
     "locale": "de",
@@ -166,10 +167,45 @@ $('#calendar')
     .on('change-month', function (e) {
     })
 ```
-### themes examples
-![promo image](demo/img/1.png)
-![promo image](demo/img/2.png)
-![promo image](demo/img/3.png)
-![promo image](demo/img/4.png)
-![promo image](demo/img/5.png)
-![promo image](demo/img/6.png)
+
+### Satisfied customers of the plugin
+
+<table>
+    <tr>
+        <td>
+            <img src="https://www.schulz-von-thun.de/files/theme-svt/img/Schulz-von-Thun-Logo70px.svg" height="75" alt="">
+        </td>
+        <td>
+            Schulz von Thun Institut<br>
+            für Kommunikation
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <img src="https://perspekto-coaching.de/img/logo/perspekto-logo-V2-dark.png" height="75" alt="">
+        </td>
+        <td>
+            Perspekto Coaching GmbH<br>
+            Institut für berufliche Entwicklung
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <img src="https://uniquo.webcito.de/images/uniquo_logo_v1.0.svg" height="75" alt="">
+        </td>
+        <td>
+            Uniquo Coaching
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <img src="https://perspekto-coaching.systems/img/webcito-logo-md.svg" height="75" alt="">
+        </td>
+        <td>
+           webcito UG
+        </td>
+    </tr>
+</table>
+
+
+
