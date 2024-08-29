@@ -612,7 +612,7 @@
          * @return {void}
          */
         function getEvents(container, selected, callback) {
-            const setup = container.data('settings')
+            const setup = container.data('settings');
             let data = {
                 from: selected.clone().getFirstDayOfMonth().getFirstDayOfWeek().formatDate(false),
                 to: selected.clone().getLastDayOfMonth().getLastDayOfWeek().formatDate(false)
@@ -650,7 +650,6 @@
          */
         function drawCalendar(containerElement, selectedDate = null) {
             const settings = containerElement.data('settings');
-            console.log(containerElement.attr('id'), settings);
             const table = containerElement.find('table:first');
             const tableBody = table.find('tbody').empty();
             let forceDate = true;
@@ -976,10 +975,17 @@
          */
         function init() {
             if (!container.data('init')) {
-                container.addClass(CONTAINER_WRAPPER_CLASS.substring(1) +' user-select-none');
+                container.addClass(CONTAINER_WRAPPER_CLASS.substring(1) + ' user-select-none');
                 container.data('current', new Date());
-                const settings = $.extend(true, {}, $.bsCalendar.DEFAULTS, options || {});
-                settings.url = container.data('target') || container.data('bsTarget') || $.bsCalendar.DEFAULTS.url;
+                let settings = $.extend(true, {}, $.bsCalendar.DEFAULTS, options || {});
+
+                // Manually overriding the URL if options.url is a function
+                if (typeof options.url === 'function') {
+                    settings.url = options.url;
+                } else {
+                    settings.url = container.data('target') || container.data('bsTarget') || $.bsCalendar.DEFAULTS.url;
+                }
+
                 Date.setLocale(settings.locale);
                 container.data('settings', settings);
                 container.css('width', settings.width);

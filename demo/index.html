@@ -44,7 +44,7 @@
                                 </a>
                                 <div class="dropdown-menu">
                                     <div data-bs-toggle="calendar" id="calendar_navbar"
-                                         ></div>
+                                    ></div>
                                 </div>
                             </li>
                         </ul>
@@ -76,20 +76,20 @@
                 <label for="floatingSelect">change language</label>
             </div>
             <div data-bs-toggle="calendar" id="calendar_inline" class="col shadow rounded"></div>
-            <button id="btnSetToday">heute</button>
         </div>
     </div>
 
 
 </div>
 
-<div class="offcanvas offcanvas-start" data-bs-theme="dark" tabindex="-1" id="offcanvasExample" aria-labelledby="offcanvasExampleLabel">
+<div class="offcanvas offcanvas-start" data-bs-theme="dark" tabindex="-1" id="offcanvasExample"
+     aria-labelledby="offcanvasExampleLabel">
     <div class="offcanvas-header">
         <h5 class="offcanvas-title" id="offcanvasExampleLabel">Offcanvas</h5>
         <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
     </div>
     <div class="offcanvas-body d-flex justify-content-center p-0">
-        <div data-bs-toggle="calendar" id="calendar_offcanvas" class="rounded w-75" ></div>
+        <div data-bs-toggle="calendar" id="calendar_offcanvas" class="rounded w-75"></div>
     </div>
 </div>
 
@@ -97,9 +97,9 @@
 <script src="../vendor/components/jquery/jquery.min.js"></script>
 <script src="../vendor/twbs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 <!--<script src="../vendor/webcito/js-date-extensions/dist/js-date-extensions.js"></script>-->
-<script src="../dist/jquery.bs.calendar.min.js"></script>
+<script src="../dist/jquery.bs.calendar.js"></script>
 <script>
-    $(document).ready(function() {
+    $(document).ready(function () {
         $.bsCalendar.setDefaults({
             locale: 'de',
             url: 'events.json',
@@ -109,11 +109,11 @@
                 }
             },
         })
-        // $.bsCalendar.setDefault('width', 5000);
+        $.bsCalendar.setDefault('width', 5000);
 
         $('#calendar_dropdown').bsCalendar({width: 300});
         $('#calendar_inline').bsCalendar({
-            locale:'en',
+            locale: 'en',
             width: '450px',
             classes: {
                 table: 'table tables-sm table-success',
@@ -130,10 +130,11 @@
                 }
             },
             event: {
-                formatter(event){
+                formatter(event) {
                     return `
                     <div class="d-flex flex-column">
                         <strong>${event.title}</strong>
+                        <small>duration: ${JSON.stringify(event.duration)}</small>
                         <div>
                             <a href="#" class="btn-example btn btn-link">more</a>
                         </div>
@@ -141,7 +142,7 @@
                 `;
                 },
                 events: {
-                    'click .btn-example'(e, event){
+                    'click .btn-example'(e, event) {
                         e.preventDefault();
                         alert(JSON.stringify(event));
                     }
@@ -149,37 +150,79 @@
             },
             url(data) {
                 return $.getJSON('events.json').then(json => {
+                    // Convert the given from and to dates into JavaScript Date objects
                     let fromDate = new Date(data.from);
                     let toDate = new Date(data.to);
+                    // Calculate the difference in milliseconds between the from and to dates
                     let diffInTime = toDate.getTime() - fromDate.getTime();
-
+                    // Iterate over each event in the JSON array
                     json.forEach(event => {
+                        // Generate a random time within the specified from and to date range
                         let randomTime = fromDate.getTime() + Math.random() * diffInTime;
-                        let randomDate = new Date(randomTime);
-
+                        let randomDate = new Date(randomTime); // 30 minutes in milliseconds
+                        // Define the minimum and maximum durations in milliseconds
+                        let minDuration = 30 * 60 * 1000;
+                        let maxDuration = 2 * 24 * 60 * 60 * 1000;  // 2 days in milliseconds
+                        // Calculate a random duration between 30 minutes and 2 days
+                        let randomDuration = Math.random() * (maxDuration - minDuration) + minDuration;
+                        // Assign the random start time to the event
                         event.start = randomDate.toISOString();
-                        event.end = new Date(randomDate.getTime() + 24*60*60*1000).toISOString();
+                        // Calculate the end time by adding the random duration to the start time
+                        event.end = new Date(randomDate.getTime() + randomDuration).toISOString();
+                        // Calculate and assign the duration of the event
+                        event.duration = calculateDuration(event.start, event.end);
                     });
-
+                    // Return the modified JSON array
                     return json;
                 });
             }
         });
 
+        /**
+         * Calculates the duration between two dates in days, hours, minutes, and seconds.
+         *
+         * @param {string|number|Date} start - The start date and time.
+         * @param {string|number|Date} end - The end date and time.
+         *
+         * @return {Object} - The duration between the two dates in days, hours, minutes, and seconds.
+         *                   The returned object has the following properties:
+         *                   - days: The number of days.
+         *                   - hours: The number of hours.
+         *                   - minutes: The number of minutes.
+         *                   - seconds: The number of seconds.
+         */
+        function calculateDuration(start, end) {
+            const startDate = new Date(start);
+            const endDate = new Date(end);
+
+            // Differenz in Millisekunden
+            const diffMs = endDate - startDate;
+
+            // Umwandlung in verschiedene Zeitmaßeinheiten
+            const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+            const diffHrs = Math.floor((diffMs % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const diffMins = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
+            const diffSecs = Math.floor((diffMs % (1000 * 60)) / 1000);
+
+            return {
+                days: diffDays,
+                hours: diffHrs,
+                minutes: diffMins,
+                seconds: diffSecs
+            };
+        }
+
         $('#calendar_offcanvas').bsCalendar({width: '80%'});
         $('#calendar_navbar').bsCalendar({width: 300});
 
-        $('#floatingSelect').on('change', function(){
+        $('#floatingSelect').on('change', function () {
             $('#calendar_inline').bsCalendar('updateOptions', {locale: $(this).val()});
         });
 
-        $('#flexSwitchTheme').on('change', function(e){
+        $('#flexSwitchTheme').on('change', function (e) {
             const theme = $(e.currentTarget).is(':checked') ? 'dark' : 'light';
             $('html').attr('data-bs-theme', theme)
             $('#calendar_inline').bsCalendar('refresh');
-        });
-        $('#btnSetToday').on('click', function(){
-            $('#calendar_inline').bsCalendar('refresh', new Date());
         });
     });
 </script>
