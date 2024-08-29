@@ -979,12 +979,15 @@
                 container.data('current', new Date());
                 let settings = $.extend(true, {}, $.bsCalendar.DEFAULTS, options || {});
 
-                // Manually overriding the URL if options.url is a function
-                if (typeof options.url === 'function') {
-                    settings.url = options.url;
-                } else {
-                    settings.url = container.data('target') || container.data('bsTarget') || $.bsCalendar.DEFAULTS.url;
-                }
+                // Manually overriding the URL if options.url is a function.
+                // This single line of code is a concise way
+                // to determine the URL by checking multiple possible sources in sequence,
+                // using options.url as the primary source,
+                // followed by the data-target or data-bsTarget attributes,
+                // and finally falling back to a default value.
+                settings.url = typeof options === 'object'
+                    ? (options.url ?? container.data('target')) || container.data('bsTarget') || $.bsCalendar.DEFAULTS.url
+                    : null;
 
                 Date.setLocale(settings.locale);
                 container.data('settings', settings);
