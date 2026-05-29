@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" class="h-100" data-bs-theme="light">
+<html lang="en" class="h-100">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -8,81 +8,135 @@
     <link href="../vendor/twbs/bootstrap-icons/font/bootstrap-icons.min.css" rel="stylesheet">
     <!--suppress CssUnusedSymbol -->
     <style>
+        :root {
+            --demo-surface: rgba(var(--bs-body-color-rgb), 0.03);
+            --demo-border: rgba(var(--bs-body-color-rgb), 0.12);
+        }
+
+        body {
+            background-color: var(--bs-body-bg);
+        }
+
+        .demo-wrap {
+            max-width: 1120px;
+        }
+
+        .demo-section {
+            border: 1px solid var(--demo-border);
+            background: var(--demo-surface);
+            border-radius: .75rem;
+        }
+
+        .demo-title {
+            letter-spacing: 0;
+        }
+
+        .demo-inline-calendar {
+            min-height: 25rem;
+        }
+
+        .demo-inline-calendar > div {
+            margin-inline: auto;
+        }
+
+        .demo-navbar-calendar .dropdown-menu,
+        .demo-dropdown-calendar .dropdown-menu {
+            border: 1px solid var(--demo-border);
+            border-radius: .75rem;
+            box-shadow: 0 .5rem 1.5rem rgba(0, 0, 0, 0.12);
+        }
+
         .cursor-pointer {
             cursor: pointer;
         }
     </style>
 </head>
-<body class="h-100 d-flex align-items-stretch">
-<div class="container flex-fill py-5 d-flex flex-column  align-items-center">
-    <h1>jquery-bs-calendar</h1>
-    <div class="form-check form-switch">
-        <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchTheme">
-        <label class="form-check-label" for="flexSwitchTheme">dark</label>
-    </div>
+<body class="h-100">
+<main class="container demo-wrap py-4 py-lg-5">
+    <header class="mb-4">
+        <div>
+            <h1 class="h3 mb-1 demo-title">jquery-bs-calendar</h1>
+            <p class="text-secondary mb-0">Bootstrap calendar in navbar, dropdown, offcanvas and inline mode.</p>
+        </div>
+    </header>
 
-    <hr class="border-dark border border-2 w-100">
+    <div class="row g-4">
+        <section class="col-12 col-lg-4">
+            <div class="demo-section p-3 p-md-4 h-100 d-flex flex-column gap-4">
+                <div>
+                    <h2 class="h6 text-uppercase text-secondary mb-3">Embedded Controls</h2>
+                    <nav class="navbar navbar-expand-lg bg-dark navbar-dark rounded-3 demo-navbar-calendar">
+                        <div class="container-fluid">
+                            <a class="navbar-brand fw-semibold" href="#">Calendar</a>
+                            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                                    data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                                    aria-expanded="false" aria-label="Toggle navigation">
+                                <span class="navbar-toggler-icon"></span>
+                            </button>
+                            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                                    <li class="nav-item dropdown">
+                                        <a class="nav-link dropdown-toggle" data-bs-auto-close="outside" href="#" role="button"
+                                           data-bs-toggle="dropdown" aria-expanded="false">
+                                            <i class="bi bi-calendar2-day"></i>
+                                        </a>
+                                        <div class="dropdown-menu p-2">
+                                            <div data-bs-toggle="calendar" id="calendar_navbar"></div>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </nav>
+                </div>
 
-    <div class="row row-cols-2">
-        <div class="col d-flex flex-column">
-
-            <nav class="navbar navbar-expand-lg bg-dark navbar-dark mb-3">
-                <div class="container-fluid">
-                    <a class="navbar-brand" href="#">Navbar</a>
-                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-                            data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
-                            aria-expanded="false" aria-label="Toggle navigation">
-                        <span class="navbar-toggler-icon"></span>
+                <div>
+                    <h2 class="h6 text-uppercase text-secondary mb-3">Offcanvas</h2>
+                    <button class="btn btn-primary w-100" type="button" data-bs-toggle="offcanvas"
+                            data-bs-target="#offcanvasExample" aria-controls="offcanvasExample">
+                        Open Calendar in Offcanvas
                     </button>
-                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                </div>
 
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" data-bs-auto-close="outside" href="#" role="button"
-                                   data-bs-toggle="dropdown" aria-expanded="false">
-                                    <i class="bi bi-calendar2-day"></i>
-                                </a>
-                                <div class="dropdown-menu">
-                                    <div data-bs-toggle="calendar" id="calendar_navbar"
-                                    ></div>
-                                </div>
-                            </li>
-                        </ul>
+                <div>
+                    <h2 class="h6 text-uppercase text-secondary mb-3">Dropdown</h2>
+                    <div class="dropdown-center demo-dropdown-calendar">
+                        <button class="btn btn-outline-secondary dropdown-toggle w-100" data-bs-auto-close="outside" type="button"
+                                data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="bi bi-calendar2-day me-1"></i> Open Dropdown Calendar
+                        </button>
+                        <div class="dropdown-menu p-2">
+                            <div data-bs-toggle="calendar" id="calendar_dropdown"></div>
+                        </div>
                     </div>
                 </div>
-            </nav>
-            <button class="btn btn-primary mb-3" type="button" data-bs-toggle="offcanvas"
-                    data-bs-target="#offcanvasExample" aria-controls="offcanvasExample">
-                in offcanvas
-            </button>
-            <div class="dropdown-center">
-                <button class="btn btn-secondary dropdown-toggle" data-bs-auto-close="outside" type="button"
-                        data-bs-toggle="dropdown" aria-expanded="false">
-                    <i class="bi bi-calendar2-day"></i>
-                </button>
-                <div class="dropdown-menu p-0">
-                    <div data-bs-toggle="calendar" id="calendar_dropdown"></div>
+            </div>
+        </section>
+
+        <section class="col-12 col-lg-8">
+            <div class="demo-section p-3 p-md-4 h-100 d-flex flex-column gap-3">
+                <div class="d-flex flex-wrap align-items-center justify-content-between gap-3">
+                    <h2 class="h6 text-uppercase text-secondary mb-0">Inline Calendar</h2>
+                    <div class="form-floating" style="min-width: 14rem;">
+                        <select class="form-select" id="floatingSelect" aria-label="Select language">
+                            <option value="de-DE">German</option>
+                            <option value="es">Spanish</option>
+                            <option value="fr">French</option>
+                            <option value="en-US" selected>English</option>
+                        </select>
+                        <label for="floatingSelect">Language</label>
+                    </div>
+                </div>
+
+                <div class="demo-inline-calendar p-2 p-md-3 border rounded-3 bg-body">
+                    <div data-bs-toggle="calendar" id="calendar_inline" class="col shadow-sm rounded-3"></div>
                 </div>
             </div>
-        </div>
-        <div class="col">
-            <div class="form-floating">
-                <select class="form-select" id="floatingSelect" aria-label="Floating label select example">
-                    <option value="de-DE">german</option>
-                    <option value="es">spain</option>
-                    <option value="fr">france</option>
-                    <option value="en-US" selected>english</option>
-                </select>
-                <label for="floatingSelect">change language</label>
-            </div>
-            <div data-bs-toggle="calendar" id="calendar_inline" class="col shadow rounded"></div>
-        </div>
+        </section>
     </div>
+</main>
 
-
-</div>
-
-<div class="offcanvas offcanvas-start" data-bs-theme="dark" tabindex="-1" id="offcanvasExample"
+<div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasExample"
      aria-labelledby="offcanvasExampleLabel">
     <div class="offcanvas-header">
         <h5 class="offcanvas-title" id="offcanvasExampleLabel">Offcanvas</h5>
@@ -116,7 +170,7 @@
             locale: 'en',
             width: '450px',
             classes: {
-                table: 'table tables-sm table-success',
+                table: 'table table-borderless table-sm',
                 tableHeaderCell: 'text-muted fw-lighter',
                 tableHeaderCellActive: 'text-success fw-bold',
                 tableData: {
@@ -219,11 +273,6 @@
             $('#calendar_inline').bsCalendar('updateOptions', {locale: $(this).val()});
         });
 
-        $('#flexSwitchTheme').on('change', function (e) {
-            const theme = $(e.currentTarget).is(':checked') ? 'dark' : 'light';
-            $('html').attr('data-bs-theme', theme)
-            $('#calendar_inline').bsCalendar('refresh');
-        });
     });
 </script>
 </body>
